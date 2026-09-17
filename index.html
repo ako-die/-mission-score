@@ -3,9 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mission Score</title>
+<title>Mission Report</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
+
 :root{--blue:#0759b8;--blue2:#0b78d1;--lav:#ddd6fe;--lav2:#ede9fe;--ink:#172554;--muted:#64748b;--line:#dbe4f0;--danger:#dc2626;--green:#16a34a}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#edf4ff;color:var(--ink)}
 .header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;text-align:center;padding:22px 16px}.logo{width:64px;height:64px;border-radius:18px;background:#fff;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;margin:auto;box-shadow:0 5px 15px #0002}.header h1{margin:9px 0 2px;font-size:25px}.header small{opacity:.9}
@@ -18,7 +19,38 @@ table{width:100%;border-collapse:collapse;margin-top:9px;font-size:14px}th,td{bo
 </style>
 </head>
 <body>
-<header class="header"><div class="logo">✓</div><h1>MISSION SCORE</h1><small>Created by Dee</small></header>
+ <!-- SPLASH SCREEN MISSION REPORT -->
+<div id="splashScreen">
+  <div class="splash-content">
+
+    <div class="ms-logo">
+      <div class="ms-circle">
+        <span>MS</span>
+      </div>
+    </div>
+
+    <h1>Mission Report</h1>
+
+    <p class="tagline">PLAN • ACT • ACHIEVE</p>
+
+    <div class="mission-line"></div>
+
+    <p class="mission-text">
+      Every Mission<br>
+      Makes a Better Service
+    </p>
+
+    <button class="start-btn" onclick="startMission()">
+      START
+    </button>
+
+    <div class="created">
+      Created by Dee
+    </div>
+
+  </div>
+</div>
+<header class="header"><div class="logo">✓</div><h1>MISSION REPORT</h1><small>Created by Dee</small></header>
 
 <main class="wrap">
 <section id="home" class="panel active">
@@ -205,6 +237,15 @@ function loadAgentQR(){
 function openAgents(){openPage('agents');renderAgents()}
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 calculate();loadAgentQR();
+ function startMission() {
+  const splash = document.getElementById("splashScreen");
+
+  splash.classList.add("hide");
+
+  setTimeout(function() {
+    splash.style.display = "none";
+  }, 500);
+}
 </script>
 </body>
 </html>
