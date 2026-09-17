@@ -200,6 +200,43 @@ table{width:100%;border-collapse:collapse;margin-top:9px;font-size:14px}th,td{bo
   #input table td{font-size:13px !important;}
 }
 
+
+/* ===== THEME LOCK: NAVY + MAROON ===== */
+body{background:linear-gradient(180deg,#eef3f9 0%,#f7f2f4 100%) !important;}
+.header{
+  background:linear-gradient(135deg,#071f49 0%,#0c3568 78%,#071a38 100%) !important;
+  border-bottom:5px solid #a80f36 !important;color:#fff !important;
+}
+.header h1,.header small{color:#fff !important;}
+#home .menu{display:grid !important;grid-template-columns:1fr !important;gap:14px !important;}
+#home .card{
+  display:flex !important;flex-direction:column !important;align-items:center !important;
+  justify-content:center !important;min-height:108px !important;padding:18px 22px !important;
+  border-radius:20px !important;
+  background:linear-gradient(135deg,#a80f36 0%,#820b2a 100%) !important;
+  border:2px solid #c74461 !important;color:#fff !important;
+  box-shadow:0 7px 16px rgba(7,31,73,.16) !important;
+  position:relative !important;overflow:hidden !important;
+}
+#home .card:before{
+  content:"" !important;position:absolute !important;left:0 !important;top:0 !important;
+  bottom:0 !important;width:7px !important;background:#071f49 !important;
+}
+#home .card span{color:#fff !important;font-size:34px !important;margin-bottom:5px !important;}
+#home .card:after{
+  content:"›" !important;position:absolute !important;right:14px !important;top:50% !important;
+  transform:translateY(-50%) !important;width:34px !important;height:34px !important;
+  line-height:31px !important;text-align:center !important;border-radius:50% !important;
+  background:rgba(255,255,255,.16) !important;color:#fff !important;font-size:28px !important;
+}
+#home h2,.panel h2{color:#071f49 !important;}
+#input h3{
+  background:linear-gradient(135deg,#a80f36,#820b2a) !important;
+  color:#fff !important;border-radius:12px !important;
+}
+#input table th{background:#edf4fc !important;color:#122752 !important;}
+#input table td input[type="checkbox"]{accent-color:#a80f36 !important;}
+
 </style>
 </head>
 <body>
