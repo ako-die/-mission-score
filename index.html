@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Mission Report</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Ccircle cx='64' cy='64' r='60' fill='%23071f49' stroke='%23cbd5e1' stroke-width='6'/%3E%3Ccircle cx='64' cy='64' r='45' fill='%239b1234' stroke='white' stroke-width='3'/%3E%3Ctext x='64' y='78' text-anchor='middle' font-family='Arial' font-size='38' font-weight='900' fill='white'%3EMS%3C/text%3E%3C/svg%3E">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-:root{--blue:#0759b8;--blue2:#0b78d1;--lav:#ddd6fe;--lav2:#ede9fe;--ink:#172554;--muted:#64748b;--line:#dbe4f0;--danger:#dc2626;--green:#16a34a}
+:root{--blue:#071f49;--blue2:#123d73;--maroon:#9b1234;--maroon2:#c71943;--lav:#f3e7ec;--lav2:#f9f1f4;--ink:#172554;--muted:#64748b;--line:#dbe4f0;--danger:#b51232;--green:#168a4a}
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#edf4ff;color:var(--ink)}
 .header{background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;text-align:center;padding:22px 16px}.logo{width:64px;height:64px;border-radius:18px;background:#fff;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;margin:auto;box-shadow:0 5px 15px #0002}.header h1{margin:9px 0 2px;font-size:25px}.header small{opacity:.9}
 .wrap{max-width:760px;margin:auto;padding:15px}.panel{display:none;background:#fff;border-radius:18px;padding:18px;margin-bottom:15px;box-shadow:0 5px 18px #0001}.panel.active{display:block}
@@ -117,6 +118,56 @@ table{width:100%;border-collapse:collapse;margin-top:9px;font-size:14px}th,td{bo
   to{opacity:0;transform:scale(1.02);visibility:hidden}
 }
 
+
+/* ===== HOME / HEADER THEME: NAVY + MAROON ===== */
+.header{
+  background:
+    radial-gradient(circle at 90% 5%, #9b1234 0%, rgba(155,18,52,0) 30%),
+    linear-gradient(135deg,#071f49 0%,#0b2d59 62%,#071a39 100%) !important;
+  border-bottom:5px solid #9b1234;
+}
+.ms-header-logo{
+  width:72px !important;height:72px !important;
+  border-radius:50% !important;
+  display:flex !important;align-items:center !important;justify-content:center !important;
+  background:#071f49 !important;
+  border:5px solid #d5dce6 !important;
+  box-shadow:0 0 0 6px #163d6b,0 8px 20px rgba(0,0,0,.3) !important;
+  margin:auto !important;
+}
+.ms-header-logo span{
+  width:54px;height:54px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(145deg,#d51c43,#8c0d2d);
+  border:2px solid white;
+  color:#fff;font-size:24px;font-weight:900;letter-spacing:-2px;
+}
+#home{
+  background:
+    radial-gradient(circle at 100% 0%, #f7dce4 0%, transparent 27%),
+    linear-gradient(145deg,#ffffff 0%,#f5f8fd 100%) !important;
+}
+#home h2{color:#071f49 !important}
+#home .card{
+  background:linear-gradient(135deg,#fff1f4 0%,#f0e5ea 100%) !important;
+  color:#071f49 !important;
+  border:2px solid #ead1da !important;
+  position:relative;overflow:hidden;
+}
+#home .card::before{
+  content:"";
+  position:absolute;left:0;top:0;bottom:0;width:7px;
+  background:linear-gradient(#9b1234,#071f49);
+}
+#home .card span{filter:none}
+#home .card:active{
+  background:linear-gradient(135deg,#ead5dc,#dce8f5) !important;
+  transform:scale(.99);
+}
+button:not(.back):not(.danger):not(.save):not(.secondary){
+  background:linear-gradient(135deg,#0b3569,#071f49);
+}
+
 </style>
 </head>
 <body>
@@ -132,7 +183,7 @@ table{width:100%;border-collapse:collapse;margin-top:9px;font-size:14px}th,td{bo
   </div>
 </div>
 
-<header class="header"><div class="logo">✓</div><h1>MISSION REPORT</h1><small>Created by Dee</small></header>
+<header class="header"><div class="logo ms-header-logo"><span>MS</span></div><h1>MISSION REPORT</h1><small>Created by Dee</small></header>
 
 <main class="wrap">
 <section id="home" class="panel active">
