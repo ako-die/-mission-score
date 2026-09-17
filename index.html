@@ -128,21 +128,77 @@ table{width:100%;border-collapse:collapse;margin-top:9px;font-size:14px}th,td{bo
 }
 
 
-/* ===== FINAL THEME LOCK: NAVY + MAROON ===== */
-:root{--blue:#071f49;--blue2:#0d376d;--maroon:#a90f36;--maroon2:#830b2a;--lav:#f3e7ec;--lav2:#f9f1f4;}
-body{background:linear-gradient(180deg,#edf3fa 0%,#f7f3f5 100%) !important;}
-.header{background:linear-gradient(135deg,#071f49 0%,#0d376d 78%,#071a38 100%) !important;border-bottom:5px solid #a90f36 !important;}
-.header h1,.header small{color:#fff !important;}
-#home h2,.panel h2,#agents h2{color:#071f49 !important;}
-#home .card{background:linear-gradient(135deg,#a90f36 0%,#830b2a 100%) !important;color:#fff !important;border-color:#c94663 !important;}
-#home .card::before{background:#071f49 !important;}
-#home .card::after{background:rgba(255,255,255,.18) !important;color:#fff !important;}
-#agents table th,#agents .tablewrap th,#input table th{background:#edf4fc !important;color:#122752 !important;}
-#agents .edit,#agents button.edit,#agents .qr,#agents button.qr{background:#5960e8 !important;color:#fff !important;}
-#agents .danger,#agents button.danger{background:#b51232 !important;color:#fff !important;}
-#agents .save,#agents button.save{background:#168a4a !important;color:#fff !important;}
-#input h3{background:linear-gradient(135deg,#a90f36,#830b2a) !important;color:#fff !important;}
-#input table td input[type=checkbox]{accent-color:#a90f36 !important;}
+/* ===== INPUT MISSION: COMPACT & MOBILE-FIT ===== */
+#input .tablewrap{
+  width:100% !important;
+  overflow:visible !important;
+}
+#input table,
+#input .tablewrap table{
+  width:100% !important;
+  min-width:0 !important;
+  max-width:100% !important;
+  table-layout:fixed !important;
+  border-collapse:collapse !important;
+}
+#input table th,
+#input table td{
+  padding:6px 5px !important;
+  height:42px !important;
+  line-height:1.15 !important;
+  vertical-align:middle !important;
+  box-sizing:border-box !important;
+}
+#input table th:first-child,
+#input table td:first-child{
+  width:40% !important;
+}
+#input table th:nth-child(2),
+#input table td:nth-child(2){
+  width:35% !important;
+  text-align:center !important;
+}
+#input table th:last-child,
+#input table td:last-child{
+  width:25% !important;
+  text-align:center !important;
+}
+#input table td input[type="checkbox"]{
+  width:21px !important;
+  height:21px !important;
+  min-width:21px !important;
+  min-height:21px !important;
+  margin:0 auto !important;
+  padding:0 !important;
+  display:block !important;
+}
+#input table td input[type="number"],
+#input table td select{
+  width:100% !important;
+  min-width:0 !important;
+  padding:8px 6px !important;
+}
+#input table .note{
+  display:block !important;
+  font-size:10px !important;
+  line-height:1.15 !important;
+  margin-top:3px !important;
+}
+#input h3{
+  margin:16px 0 7px !important;
+  padding:9px 11px !important;
+}
+#input .tablewrap + h3{margin-top:16px !important;}
+@media(max-width:560px){
+  #input .tablewrap{overflow:visible !important;}
+  #input table{min-width:0 !important;width:100% !important;}
+  #input table th,#input table td{
+    padding:6px 4px !important;
+    height:40px !important;
+  }
+  #input table th{font-size:12px !important;}
+  #input table td{font-size:13px !important;}
+}
 
 </style>
 </head>
