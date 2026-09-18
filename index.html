@@ -6,426 +6,583 @@
 <title>Mission Report</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-:root{--blue:#082b57;--blue2:#0b3d73;--maroon:#97002d;--maroon2:#b00038;--lav:#97002d;--lav2:#f7e8ee;--ink:#172554;--muted:#64748b;--line:#dbe4f0;--danger:#dc2626;--green:#16a34a}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#edf4ff;color:var(--ink)}
-.header{background:linear-gradient(135deg,#061d3b,#0b3d73);color:#fff;text-align:center;padding:22px 16px}.logo{width:64px;height:64px;border-radius:18px;background:#fff;color:var(--blue);display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800;margin:auto;box-shadow:0 5px 15px #0002}.header h1{margin:9px 0 2px;font-size:25px}.header small{opacity:.9}
-.wrap{max-width:760px;margin:auto;padding:15px}.panel{display:none;background:#fff;border-radius:18px;padding:18px;margin-bottom:15px;box-shadow:0 5px 18px #0001}.panel.active{display:block}
-.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{background:linear-gradient(135deg,#97002d,#b00038);color:#fff;border:0;border-radius:18px;padding:18px 10px;min-height:92px;font-weight:700;font-size:15px;box-shadow:0 4px 12px #0001;cursor:pointer}.card span{display:block;font-size:28px;margin-bottom:7px}
-h2{margin:0 0 14px;color:#082b57}h3{color:#97002d;margin-bottom:8px}label{display:block;font-weight:700;margin:11px 0 6px}input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;background:#fff}button{border:0;border-radius:10px;padding:11px 13px;background:#082b57;color:#fff;font-weight:700;cursor:pointer;margin-top:9px}.back{background:#64748b}.save{background:var(--green)}.danger{background:var(--danger)}.secondary{background:#6366f1}
-table{width:100%;border-collapse:collapse;margin-top:9px;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:9px 5px;text-align:left;vertical-align:middle}th{background:#eff6ff}.center{text-align:center}.score{background:#eff6ff;border-radius:14px;padding:14px;margin-top:14px}.grand{font-size:24px;font-weight:800;color:var(--blue)}.note{font-size:13px;color:var(--muted)}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--lav2);font-size:12px;font-weight:700}.hidden{display:none!important}.qrbox{text-align:center;border:2px dashed #94a3b8;border-radius:14px;padding:15px;margin-top:14px}.qrbox canvas,.qrbox img{margin:10px auto!important}.smallbtn{padding:7px 9px;font-size:12px;margin:0}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.summary div{background:#eff6ff;padding:10px;border-radius:12px;text-align:center}.summary b{display:block;font-size:18px;color:var(--blue)}.empty{text-align:center;color:var(--muted);padding:20px}
-.review-filter{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.review-card{border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:10px;background:#fff}
-.review-card h4{margin:0 0 8px;color:var(--blue);font-size:17px}
-.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.review-item{background:#f3f6fb;border-radius:10px;padding:10px}
-.review-item span{display:block;font-size:12px;color:var(--muted)}
-.review-item b{font-size:18px;color:var(--ink)}
-.review-total{margin-top:12px;background:linear-gradient(135deg,#082b57,#97002d);color:#fff;border-radius:14px;padding:15px;text-align:center}
-.review-total span{display:block;font-size:12px;opacity:.9}
-.review-total b{display:block;font-size:30px;margin-top:3px}
-.review-table{width:100%;border-collapse:collapse;margin-top:10px}
-.review-table th,.review-table td{padding:9px 7px;border-bottom:1px solid var(--line);text-align:left}
-.review-table th{background:#eff6ff}
-@media(max-width:560px){.review-filter,.review-grid{grid-template-columns:1fr}}
-
-@media(max-width:560px){.menu{grid-template-columns:1fr}.summary{grid-template-columns:1fr 1fr}.tablewrap{overflow-x:auto}table{min-width:620px}}
-@media print{.header,.menu,button,.back,.danger,.secondary,.save{display:none!important}.panel{display:block!important;box-shadow:none}}
-
-/* ===== MISSION REPORT SPLASH - FINAL ===== */
-#splashScreen{
-  position:fixed !important;
-  top:0 !important; left:0 !important; right:0 !important; bottom:0 !important;
-  width:100vw !important; height:100vh !important;
-  min-height:100vh !important;
-  z-index:2147483647 !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  margin:0 !important;
-  padding:0 !important;
-  overflow:hidden !important;
-  box-sizing:border-box !important;
-  background:
-    radial-gradient(circle at 85% 8%, #9b0b2b 0%, rgba(155,11,43,0) 30%),
-    radial-gradient(circle at 10% 92%, #9b0b2b 0%, rgba(155,11,43,0) 34%),
-    linear-gradient(145deg,#071b38 0%,#092b58 58%,#06162e 100%) !important;
+:root{
+  --navy:#082b55;--navy2:#0b3d73;--maroon:#8f1239;--maroon2:#b31343;
+  --blue:#0759b8;--ink:#142b55;--muted:#64748b;--line:#d9e1ec;
+  --soft:#eef4fb;--white:#fff;--green:#16a34a;--red:#dc2626;--purple:#635bdb;
 }
-#splashScreen *{box-sizing:border-box !important}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#edf3fb;color:var(--ink)}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0}
+.header{
+  background:linear-gradient(135deg,var(--navy),var(--navy2));
+  color:#fff;text-align:center;padding:26px 16px 24px;
+  border-bottom:5px solid var(--maroon)
+}
+.logo{
+  width:64px;height:64px;margin:auto;border-radius:18px;background:#fff;
+  color:var(--blue);display:flex;align-items:center;justify-content:center;
+  font-size:36px;font-weight:900;box-shadow:0 5px 15px #0003
+}
+.header h1{margin:9px 0 2px;font-size:27px}
+.header small{opacity:.92}
+.wrap{max-width:760px;margin:auto;padding:15px}
+.panel{
+  display:none;background:#fff;border-radius:20px;padding:18px;
+  margin-bottom:15px;box-shadow:0 5px 18px #00000012
+}
+.panel.active{display:block}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{
+  background:linear-gradient(135deg,#8f1239,#b31343);color:#fff;
+  border-radius:18px;padding:16px 10px;min-height:92px;
+  font-weight:800;font-size:15px;box-shadow:0 5px 13px #0002
+}
+.card span{display:block;font-size:28px;margin-bottom:6px}
+h2{margin:0 0 14px;color:var(--navy);font-size:28px}
+h3{
+  margin:18px 0 8px;padding:9px 10px;border-radius:0;
+  color:#fff;background:linear-gradient(90deg,var(--maroon),var(--maroon2));
+  font-size:20px
+}
+label{display:block;font-weight:800;margin:11px 0 6px}
+input,select,textarea{
+  width:100%;padding:12px;border:2px solid #d5dee9;border-radius:12px;
+  background:#fff;color:#111;font-size:15px
+}
+input:focus,select:focus,textarea:focus{outline:2px solid #b8d1ef;border-color:var(--blue)}
+button.action{padding:11px 14px;border-radius:11px;background:var(--blue);color:#fff;font-weight:800;margin-top:9px}
+.save{background:var(--green)!important}.danger{background:var(--red)!important}
+.secondary{background:var(--purple)!important}.back{background:#64748b!important}
+.smallbtn{padding:8px 10px!important;font-size:12px!important;margin:2px!important}
+.note{font-size:13px;line-height:1.45;color:var(--muted)}
+.hidden{display:none!important}
+.tablewrap{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:9px 7px;text-align:left;vertical-align:middle}
+th{background:#eef4fb;color:var(--ink);font-weight:800}
+.center{text-align:center}
+input[type=checkbox]{width:23px;height:23px;accent-color:var(--maroon);margin:0}
+.score{
+  background:#eef4fb;border-radius:14px;padding:14px;margin-top:14px
+}
+.grand{font-size:23px;font-weight:900;color:var(--maroon)}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.summary div{background:#eef4fb;padding:10px;border-radius:12px;text-align:center}
+.summary b{display:block;font-size:18px;color:var(--navy);margin-top:3px}
+.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#f6e7ee;font-weight:800}
+.empty{text-align:center;color:var(--muted);padding:22px}
+.actionrow{display:flex;flex-wrap:wrap;gap:5px}
+.detail{
+  border:1px solid #dbe4ef;border-radius:14px;padding:13px;margin:10px 0;
+  background:#fff
+}
+.detail h4{margin:0 0 8px;color:var(--navy);font-size:18px}
+.qrbox{text-align:center;border:2px dashed #9aa9bb;border-radius:14px;padding:15px;margin-top:14px}
+.qrbox canvas,.qrbox img{margin:10px auto!important}
+.qr-title{font-weight:900;color:var(--maroon)}
+hr{border:0;border-top:1px solid #cfd8e3;margin:12px 0}
+#printArea{display:none}
+
+#splashScreen{
+ position:fixed;inset:0;width:100vw;height:100vh;z-index:99999;
+ display:flex;align-items:center;justify-content:center;overflow:hidden;
+ background:
+ radial-gradient(circle at 88% 7%,#a90f3b 0%,transparent 30%),
+ radial-gradient(circle at 8% 92%,#a90f3b 0%,transparent 33%),
+ linear-gradient(145deg,#061a36,#092e5c 60%,#06162e)
+}
 .splash-content{
-  width:min(100%,430px) !important;
-  min-height:100vh !important;
-  padding:35px 22px 28px !important;
-  margin:0 auto !important;
-  display:flex !important;
-  flex-direction:column !important;
-  align-items:center !important;
-  justify-content:center !important;
-  text-align:center !important;
+ width:min(100%,430px);height:100%;padding:28px 22px;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center
 }
 .ms-logo{
-  width:150px !important; height:150px !important;
-  flex:0 0 150px !important;
-  display:flex !important; align-items:center !important; justify-content:center !important;
-  border-radius:50% !important;
-  background:#071b38 !important;
-  border:6px solid #c5cfdd !important;
-  box-shadow:0 0 0 8px #17385f,0 12px 32px rgba(0,0,0,.45) !important;
-  margin:0 0 26px !important;
+ width:145px;height:145px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+ background:#071c39;border:6px solid #c8d1de;
+ box-shadow:0 0 0 8px #17385f,0 12px 32px #0007;margin-bottom:25px
 }
 .ms-circle{
-  width:122px !important; height:122px !important;
-  display:flex !important; align-items:center !important; justify-content:center !important;
-  border-radius:50% !important;
-  background:linear-gradient(145deg,#df2144,#85001e) !important;
-  border:3px solid #fff !important;
-  box-shadow:inset 0 5px 12px rgba(255,255,255,.25),0 6px 18px rgba(0,0,0,.35) !important;
+ width:118px;height:118px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+ background:linear-gradient(145deg,#df2144,#85001e);border:3px solid #fff;
+ box-shadow:inset 0 5px 12px #fff4,0 6px 18px #0006
 }
-.ms-circle span{
-  color:#fff !important; font-size:48px !important; line-height:1 !important;
-  font-weight:900 !important; letter-spacing:-3px !important;
-  text-shadow:2px 3px 4px rgba(0,0,0,.35) !important;
-}
-#splashScreen h1{
-  margin:0 !important; color:#fff !important;
-  font-size:36px !important; line-height:1.15 !important;
-  font-weight:800 !important; letter-spacing:1px !important;
-}
-.tagline{
-  margin:10px 0 0 !important; color:#dce8f7 !important;
-  font-size:13px !important; line-height:1.3 !important;
-  letter-spacing:4px !important; font-weight:700 !important;
-}
-.mission-line{
-  width:125px !important; height:5px !important;
-  margin:21px auto !important; border-radius:10px !important;
-  background:linear-gradient(90deg,#d7193f 0 50%,#2587d9 50% 100%) !important;
-}
-.mission-text{
-  margin:5px 0 30px !important; color:#fff !important;
-  font-size:21px !important; line-height:1.4 !important;
-  font-style:italic !important; font-weight:600 !important;
-}
+.ms-circle span{color:#fff;font-size:47px;font-weight:900;letter-spacing:-3px}
+#splashScreen h1{color:#fff;margin:0;font-size:36px;line-height:1.15}
+.tagline{color:#dce8f7;letter-spacing:4px;font-weight:800;font-size:13px;margin:10px 0 0}
+.mission-line{width:125px;height:5px;border-radius:10px;margin:21px 0;background:linear-gradient(90deg,#d7193f 0 50%,#2587d9 50% 100%)}
+.mission-text{color:#fff;font-size:21px;line-height:1.4;font-style:italic;font-weight:700;margin:5px 0 30px}
 .start-btn{
-  width:230px !important; min-height:54px !important;
-  margin:0 !important; padding:14px 25px !important;
-  border:0 !important; border-radius:40px !important;
-  color:#fff !important; background:linear-gradient(135deg,#e21d3f,#98001f) !important;
-  font-size:18px !important; font-weight:800 !important;
-  box-shadow:0 8px 20px rgba(0,0,0,.35),inset 0 1px 2px rgba(255,255,255,.3) !important;
-  cursor:pointer !important;
+ width:230px;min-height:54px;border-radius:40px;color:#fff;
+ background:linear-gradient(135deg,#e21d3f,#98001f);font-size:18px;font-weight:900;
+ box-shadow:0 8px 20px #0006,inset 0 1px 2px #fff5
 }
-.created{
-  margin-top:34px !important; color:#dce8f7 !important;
-  font-size:13px !important; line-height:1.2 !important;
-}
+.created{margin-top:32px;color:#dce8f7;font-size:13px}
 .created:before,.created:after{
-  content:"" !important; display:inline-block !important;
-  width:42px !important; height:1px !important;
-  background:#9aaac0 !important; vertical-align:middle !important;
-  margin:0 10px !important;
+ content:"";display:inline-block;width:42px;height:1px;background:#9aaac0;
+ vertical-align:middle;margin:0 10px
 }
-#splashScreen.hide{
-  animation:splashOut .45s ease forwards !important;
-}
-@keyframes splashOut{
-  from{opacity:1;transform:scale(1)}
-  to{opacity:0;transform:scale(1.02);visibility:hidden}
-}
+#splashScreen.hide{animation:splashOut .45s ease forwards}
+@keyframes splashOut{to{opacity:0;transform:scale(1.02);visibility:hidden}}
 
+@media(max-width:560px){
+ .menu{grid-template-columns:1fr}
+ .summary{grid-template-columns:1fr 1fr}
+ .panel{padding:16px}
+ h2{font-size:25px}
+ table{font-size:13px}
+ th,td{padding:8px 6px}
+}
+@media print{
+ body{background:#fff}
+ .header,.menu,button,#splashScreen{display:none!important}
+ .panel{display:none!important;box-shadow:none;margin:0;padding:0}
+ #printArea{display:block!important}
+}
 </style>
 </head>
 <body>
+
 <div id="splashScreen">
-  <div class="splash-content">
-    <div class="ms-logo"><div class="ms-circle"><span>MS</span></div></div>
-    <h1>Mission Report</h1>
-    <p class="tagline">PLAN • ACT • ACHIEVE</p>
-    <div class="mission-line"></div>
-    <p class="mission-text">Every Mission<br>Makes a Better Service</p>
-    <button class="start-btn" onclick="startMission()">START</button>
-    <div class="created">Created by Dee</div>
-  </div>
+ <div class="splash-content">
+  <div class="ms-logo"><div class="ms-circle"><span>MS</span></div></div>
+  <h1>Mission Report</h1>
+  <p class="tagline">PLAN • ACT • ACHIEVE</p>
+  <div class="mission-line"></div>
+  <p class="mission-text">Every Mission<br>Makes a Better Service</p>
+  <button class="start-btn" onclick="startMission()">START</button>
+  <div class="created">Created by Dee</div>
+ </div>
 </div>
 
-<header class="header"><div class="logo">✓</div><h1>MISSION REPORT</h1><small>Created by Dee</small></header>
+<header class="header">
+ <div class="logo">✓</div>
+ <h1>MISSION REPORT</h1>
+ <small>Created by Dee</small>
+</header>
 
 <main class="wrap">
+
 <section id="home" class="panel active">
-<h2>Menu Utama</h2>
-<div class="menu">
-<button class="card" onclick="openPage('input')"><span>📝</span>Input Mission Report</button>
-<button class="card" onclick="openDaily()"><span>📊</span>Daily Report</button>
-<button class="card" onclick="openHistory()"><span>📚</span>History</button>
-<button class="card" onclick="openReview()"><span>🔎</span>Review</button>
-<button class="card" onclick="openPage('print')"><span>🖨️</span>Cetak Laporan</button>
-<button class="card" onclick="openAgents()"><span>👥</span>Master Agent</button>
-</div>
+ <h2>Menu Utama</h2>
+ <div class="menu">
+  <button class="card" onclick="openPage('input')"><span>📝</span>Input Mission Report</button>
+  <button class="card" onclick="openDaily()"><span>📊</span>Daily Report</button>
+  <button class="card" onclick="openHistory()"><span>📚</span>History</button>
+  <button class="card" onclick="openReview()"><span>🔎</span>Review</button>
+  <button class="card" onclick="openPrint()"><span>🖨️</span>Cetak Laporan</button>
+  <button class="card" onclick="openAgents()"><span>👥</span>Master Agent</button>
+ </div>
 </section>
 
 <section id="input" class="panel">
-<h2>📝 Input Mission Report</h2>
-<label>Nama Agent</label>
-<input id="agent" placeholder="Pilih melalui QR atau ketik nama Agent">
-<p id="agentLock" class="note hidden">Nama Agent dikunci dari QR.</p>
-<label>Customer Target</label>
-<select id="target"><option value="">Pilih target customer (1–15)</option></select>
-<label>Tanggal</label><input id="date" type="date">
+ <h2>📝 Input Mission Report</h2>
+ <label>Nama Agent</label>
+ <input id="agent" placeholder="Pilih melalui QR atau ketik nama Agent">
+ <p id="agentLock" class="note hidden"></p>
 
-<h3>🎯 THE MISSION — GSETSA</h3>
-<div class="tablewrap"><table><tr><th>Mission</th><th class="center">Dilakukan</th><th>Score</th></tr><tbody id="missionRows"></tbody></table></div>
+ <label>Customer Target</label>
+ <select id="target"><option value="">Pilih target customer (1–15)</option></select>
 
-<h3>🧩 PELENGKAP</h3>
-<div class="tablewrap"><table><tr><th>Item</th><th class="center">Dilakukan</th><th>Score</th></tr><tbody id="pelRows"></tbody></table></div>
+ <label>Tanggal</label>
+ <input id="date" type="date">
 
-<h3>📋 PROGRAM</h3>
-<div class="tablewrap"><table>
-<tr><th>Program</th><th>Input</th><th>Score</th></tr>
-<tr><td>A</td><td><label style="margin:0;font-size:12px">Jumlah kesalahan</label><input id="errors" type="number" min="0" step="1" value="0" oninput="calculate()"><span class="note">0=100, 1=90, 2=80, dst. Minimum 0.</span></td><td id="scoreA">100</td></tr>
-<tr><td>R</td><td><select id="referral" onchange="calculate()"><option value="0">Tidak ada referral</option><option value="100">Ada referral</option></select></td><td id="scoreR">0</td></tr>
-</table></div>
+ <h3>🎯 THE MISSION — GSETSA</h3>
+ <div class="tablewrap"><table>
+  <tr><th>Mission</th><th class="center">Dilakukan</th><th>Score</th></tr>
+  <tbody id="missionRows"></tbody>
+ </table></div>
 
-<label>Catatan</label><textarea id="notes" rows="4" placeholder="Tulis catatan Mission Report..."></textarea>
+ <h3>🧩 PELENGKAP</h3>
+ <div class="tablewrap"><table>
+  <tr><th>Item</th><th class="center">Dilakukan</th><th>Score</th></tr>
+  <tbody id="pelRows"></tbody>
+ </table></div>
 
-<div class="score">
-<div>Total Score Mission: <b id="tm">0</b></div>
-<div>Total Score Pelengkap: <b id="tp">0</b></div>
-<div>Total Score Program: <b id="tprog">100</b></div><hr>
-<div class="grand">Grand Total / Score Today: <span id="grand">100</span></div>
-</div>
-<button class="save" onclick="saveReport()">💾 Simpan Report</button>
-<button class="back" onclick="openPage('home')">← Kembali</button>
+ <h3>📋 PROGRAM</h3>
+ <div class="tablewrap"><table>
+  <tr><th>Program</th><th>Input</th><th>Score</th></tr>
+  <tr>
+   <td>A</td>
+   <td>
+    <label style="margin:0;font-size:12px">Jumlah kesalahan</label>
+    <input id="errors" type="number" min="0" step="1" value="0" oninput="calculate()">
+    <span class="note">0 = 100, 1 = 90, 2 = 80, dst. Minimum 0.</span>
+   </td>
+   <td id="scoreA">100</td>
+  </tr>
+  <tr>
+   <td>R</td>
+   <td>
+    <select id="referral" onchange="calculate()">
+     <option value="0">Tidak ada referral</option>
+     <option value="100">Ada referral</option>
+    </select>
+   </td>
+   <td id="scoreR">0</td>
+  </tr>
+ </table></div>
+
+ <label>Catatan</label>
+ <textarea id="notes" rows="4" placeholder="Tulis catatan Mission Report..."></textarea>
+
+ <div class="score">
+  <div>Total Score Mission: <b id="tm">0</b></div>
+  <div>Total Score Pelengkap: <b id="tp">0</b></div>
+  <div>Total Score Program: <b id="tprog">100</b></div>
+  <hr>
+  <div class="grand">Grand Total / Score Today: <span id="grand">100</span></div>
+ </div>
+ <button class="action save" onclick="saveReport()">💾 Simpan Report</button>
+ <button class="action back" onclick="openPage('home')">← Kembali</button>
 </section>
 
 <section id="daily" class="panel">
-<h2>📊 Daily Report</h2>
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-<button onclick="dailyMode='all';renderDaily()">📊 Semua Agent</button>
-<button onclick="dailyMode='agent';renderDaily()">👤 Per Agent</button>
-</div>
-<div id="agentFilter" class="hidden"><label>Pilih Agent</label><select id="dailyAgent" onchange="renderDaily()"></select></div>
-<div id="dailyContent"></div>
-<button class="danger" onclick="deleteAllReports()">🗑️ Hapus Semua Data</button>
-<button class="back" onclick="openPage('home')">← Kembali</button>
+ <h2>📊 Daily Report</h2>
+ <div class="actionrow">
+  <button class="action" onclick="dailyMode='all';renderDaily()">📊 Semua Agent</button>
+  <button class="action secondary" onclick="dailyMode='agent';renderDaily()">👤 Per Agent</button>
+ </div>
+ <div id="agentFilter" class="hidden">
+  <label>Pilih Agent</label><select id="dailyAgent" onchange="renderDaily()"></select>
+ </div>
+ <div id="dailyContent"></div>
+ <button class="action danger" onclick="deleteAllReports()">🗑️ Hapus Semua Data</button>
+ <button class="action back" onclick="openPage('home')">← Kembali</button>
 </section>
 
-<section id="history" class="panel"><h2>📚 History</h2><div id="historyContent"></div><button class="back" onclick="openPage('home')">← Kembali</button></section>
+<section id="history" class="panel">
+ <h2>📚 History</h2>
+ <div id="historyContent"></div>
+ <button class="action back" onclick="openPage('home')">← Kembali</button>
+</section>
+
 <section id="review" class="panel">
-<h2>🔎 Review Mission Report</h2>
-<p class="note">Pilih Agent dan tanggal/laporan untuk melihat hasil penilaian secara lengkap.</p>
-
-<div class="review-filter">
-  <div>
-    <label>Pilih Agent</label>
-    <select id="reviewAgent" onchange="renderReview()">
-      <option value="">Semua Agent</option>
-    </select>
-  </div>
-  <div>
-    <label>Pilih Laporan</label>
-    <select id="reviewReport" onchange="renderReviewDetail()">
-      <option value="">Pilih laporan</option>
-    </select>
-  </div>
-</div>
-
-<div id="reviewContent"></div>
-<div id="reviewDetail"></div>
-<button class="back" onclick="openPage('home')">← Kembali</button>
+ <h2>🔎 Review Mission Report</h2>
+ <p class="note">Pilih Agent dan laporan untuk melihat hasil penilaian secara lengkap.</p>
+ <label>Pilih Agent</label>
+ <select id="reviewAgent" onchange="renderReview()"><option value="">Pilih Agent</option></select>
+ <label>Pilih Laporan</label>
+ <select id="reviewReport" onchange="renderReview()"><option value="">Pilih Laporan</option></select>
+ <div id="reviewContent"></div>
+ <button class="action back" onclick="openPage('home')">← Kembali</button>
 </section>
 
-<section id="print" class="panel"><h2>🖨️ Cetak Laporan</h2><p class="note">Gunakan cetak browser untuk mencetak laporan yang tampil. Pilih Daily Report terlebih dahulu jika ingin mencetak rekap.</p><button onclick="openDaily();setTimeout(()=>window.print(),200)">🖨️ Cetak Daily Report</button><button class="back" onclick="openPage('home')">← Kembali</button></section>
+<section id="print" class="panel">
+ <h2>🖨️ Cetak Laporan</h2>
+ <p class="note">Pilih Agent atau semua Agent, lalu cetak laporan dalam format A4.</p>
+ <label>Pilih Agent</label>
+ <select id="printAgent" onchange="renderPrintPreview()"><option value="">Semua Agent</option></select>
+ <label>Periode</label>
+ <select id="printPeriod" onchange="renderPrintPreview()">
+  <option value="all">Semua Data</option>
+  <option value="month">Bulan Berjalan</option>
+ </select>
+ <div id="printPreview"></div>
+ <button class="action" onclick="printReport()">🖨️ Cetak / Simpan PDF</button>
+ <button class="action back" onclick="openPage('home')">← Kembali</button>
+</section>
 
 <section id="agents" class="panel">
-<h2>👥 Master Agent</h2>
-<p class="note">Setiap Agent memiliki ID dan QR Code unik. Agent lama dapat dinonaktifkan tanpa menghapus History.</p>
-<label>Nama Agent</label><input id="newAgent" placeholder="Contoh: Budi">
-<button class="save" onclick="addAgent()">➕ Tambah Agent</button>
-<div id="agentsContent"></div>
-<div id="qrBox" class="qrbox hidden"><h3 id="qrTitle"></h3><div id="qrcode"></div><p id="qrInfo" class="note"></p><button onclick="window.print()">🖨️ Cetak QR</button></div>
-<button class="back" onclick="openPage('home')">← Kembali</button>
+ <h2>👥 Master Agent</h2>
+ <p class="note">Setiap Agent memiliki ID dan QR Code unik. Agent lama dapat dinonaktifkan tanpa menghapus History.</p>
+ <label>Nama Agent</label>
+ <input id="newAgent" placeholder="Contoh: Budi">
+ <button class="action save" onclick="addAgent()">➕ Tambah Agent</button>
+ <div id="agentsContent"></div>
+ <div id="qrBox" class="qrbox hidden">
+  <h3 class="qr-title" id="qrTitle"></h3>
+  <div id="qrcode"></div>
+  <p id="qrInfo" class="note"></p>
+  <button class="action" onclick="printQR()">🖨️ Cetak QR</button>
+ </div>
+ <button class="action back" onclick="openPage('home')">← Kembali</button>
 </section>
+
 </main>
 
-<script>
-const KEY='missionReportsClean', AKEY='missionAgentsClean';
-let dailyMode='all';
-const missions=['G','S','E','T','S','A'], pelengkap=['C','RF'];
-const $=id=>document.getElementById(id);
-for(let i=1;i<=15;i++) $('target').insertAdjacentHTML('beforeend',`<option value="${i}">${i} Customer</option>`);
-$('date').value=new Date().toISOString().slice(0,10);
-$('missionRows').innerHTML=missions.map((m,i)=>`<tr><td>${m}</td><td class="center"><input type="checkbox" class="m" onchange="calculate()"></td><td class="ms">0</td></tr>`).join('');
-$('pelRows').innerHTML=pelengkap.map((m,i)=>`<tr><td>${m}</td><td class="center"><input type="checkbox" class="p" onchange="calculate()"></td><td class="ps">0</td></tr>`).join('');
+<div id="printArea"></div>
 
+<script>
+const KEY='missionReportsFinalV1', AKEY='missionAgentsFinalV1';
+const missions=['G','S','E','T','S','A'], pelengkap=['C','RF'];
+let dailyMode='all', editingAgentIndex=-1;
+
+const $=id=>document.getElementById(id);
+function esc(v){
+ return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
 function reports(){return JSON.parse(localStorage.getItem(KEY)||'[]')}
 function agents(){return JSON.parse(localStorage.getItem(AKEY)||'[]')}
 function saveAgents(a){localStorage.setItem(AKEY,JSON.stringify(a))}
+
+for(let i=1;i<=15;i++) $('target').insertAdjacentHTML('beforeend',`<option value="${i}">${i} Customer</option>`);
+$('date').value=new Date().toISOString().slice(0,10);
+
+$('missionRows').innerHTML=missions.map(m=>`
+<tr><td><b>${m}</b></td><td class="center"><input type="checkbox" class="m" onchange="calculate()"></td><td class="ms">0</td></tr>`).join('');
+$('pelRows').innerHTML=pelengkap.map(m=>`
+<tr><td><b>${m}</b></td><td class="center"><input type="checkbox" class="p" onchange="calculate()"></td><td class="ps">0</td></tr>`).join('');
+
 function calculate(){
  let tm=0,tp=0;
- document.querySelectorAll('.m').forEach((e,i)=>{let s=e.checked?100:0;tm+=s;document.querySelectorAll('.ms')[i].textContent=s});
- document.querySelectorAll('.p').forEach((e,i)=>{let s=e.checked?100:0;tp+=s;document.querySelectorAll('.ps')[i].textContent=s});
- let n=Math.max(0,parseInt($('errors').value||0,10)),a=Math.max(0,100-n*10),r=+$('referral').value;
- $('scoreA').textContent=a;$('scoreR').textContent=r;$('tm').textContent=tm;$('tp').textContent=tp;$('tprog').textContent=a+r;$('grand').textContent=tm+tp+a+r;
+ document.querySelectorAll('.m').forEach((e,i)=>{
+  let s=e.checked?100:0;tm+=s;document.querySelectorAll('.ms')[i].textContent=s;
+ });
+ document.querySelectorAll('.p').forEach((e,i)=>{
+  let s=e.checked?100:0;tp+=s;document.querySelectorAll('.ps')[i].textContent=s;
+ });
+ let n=Math.max(0,parseInt($('errors').value||0,10));
+ let a=Math.max(0,100-n*10),r=+$('referral').value;
+ $('scoreA').textContent=a;$('scoreR').textContent=r;
+ $('tm').textContent=tm;$('tp').textContent=tp;$('tprog').textContent=a+r;
+ $('grand').textContent=tm+tp+a+r;
 }
-function openPage(id){document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');scrollTo(0,0)}
+
+function openPage(id){
+ document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+ $(id).classList.add('active');window.scrollTo(0,0);
+}
+function startMission(){
+ const s=$('splashScreen');s.classList.add('hide');
+ setTimeout(()=>s.style.display='none',450);
+}
+function resetInput(){
+ $('agent').value='';$('agent').readOnly=false;$('agent').style.background='';
+ $('agentLock').classList.add('hidden');$('target').value='';
+ $('errors').value=0;$('referral').value='0';$('notes').value='';
+ document.querySelectorAll('.m,.p').forEach(e=>e.checked=false);
+ calculate();
+}
+
 function saveReport(){
- let name=$('agent').value.trim();
+ const name=$('agent').value.trim();
  if(!name){alert('Nama Agent wajib diisi.');return}
  if(!$('target').value){alert('Customer Target wajib dipilih.');return}
  calculate();
- let data=reports(), errors=Math.max(0,parseInt($('errors').value||0,10));
- data.push({id:Date.now(),agent:name,target:+$('target').value,date:$('date').value,notes:$('notes').value.trim(),errors,referral:+$('referral').value,mission:+$('tm').textContent,pelengkap:+$('tp').textContent,program:+$('tprog').textContent,total:+$('grand').textContent,created:new Date().toISOString()});
- localStorage.setItem(KEY,JSON.stringify(data));alert('Mission Report berhasil disimpan.');
+ const errors=Math.max(0,parseInt($('errors').value||0,10));
+ const d=reports();
+ d.push({
+  id:Date.now(),agent:name,target:+$('target').value,date:$('date').value,
+  notes:$('notes').value.trim(),errors,referral:+$('referral').value,
+  mission:+$('tm').textContent,pelengkap:+$('tp').textContent,
+  program:+$('tprog').textContent,total:+$('grand').textContent,
+  missionDetail:[...document.querySelectorAll('.m')].map(x=>x.checked),
+  pelDetail:[...document.querySelectorAll('.p')].map(x=>x.checked),
+  created:new Date().toISOString()
+ });
+ localStorage.setItem(KEY,JSON.stringify(d));
+ alert('Mission Report berhasil disimpan.');
  resetInput();openDaily();
 }
-function resetInput(){ $('agent').value='';$('agent').readOnly=false;$('agent').style.background='';$('agentLock').classList.add('hidden');$('target').value='';$('errors').value=0;$('referral').value=0;$('notes').value='';document.querySelectorAll('.m,.p').forEach(e=>e.checked=false);calculate() }
+
 function openDaily(){openPage('daily');renderDaily()}
 function renderDaily(){
- let data=reports(), filter=$('agentFilter'), sel=$('dailyAgent');
+ const data=reports(),filter=$('agentFilter'),sel=$('dailyAgent');
  filter.classList.toggle('hidden',dailyMode!=='agent');
- let names=[...new Set(data.map(x=>x.agent))].sort((a,b)=>a.localeCompare(b));
- let current=sel.value;
- sel.innerHTML='<option value="">Pilih Agent</option>'+names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join('');
- if(names.includes(current)) sel.value=current;
- if(dailyMode==='agent' && !sel.value && names.length) sel.value=names[0];
- let rows=dailyMode==='agent'&&sel.value?data.filter(x=>x.agent===sel.value):data;
- let sum=rows.reduce((a,x)=>a+x.total,0),avg=rows.length?Math.round(sum/rows.length):0;
- let title=dailyMode==='all'?'Semua Agent':(sel.value||'Pilih Agent');
- let h='<div class="summary"><div>Report<b>'+rows.length+'</b></div><div>Total Score<b>'+sum+'</b></div><div>Rata-rata<b>'+avg+'</b></div></div>';
+ const names=[...new Set(data.map(x=>x.agent))].sort((a,b)=>a.localeCompare(b));
+ const old=sel.value;
+ sel.innerHTML='<option value="">Pilih Agent</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+ if(names.includes(old))sel.value=old;
+ if(dailyMode==='agent'&&!sel.value&&names.length)sel.value=names[0];
+
+ const rows=dailyMode==='agent'&&sel.value?data.filter(x=>x.agent===sel.value):data;
+ const sum=rows.reduce((a,x)=>a+x.total,0),avg=rows.length?Math.round(sum/rows.length):0;
+ let h=`<div class="summary"><div>Report<b>${rows.length}</b></div><div>Total Score<b>${sum}</b></div><div>Rata-rata<b>${avg}</b></div></div>`;
  if(rows.length){
-  h+='<div class="tablewrap"><table><tr><th>Tanggal</th><th>Agent</th><th>Target</th><th>Mission</th><th>Pelengkap</th><th>Program</th><th>Total</th><th>Aksi</th></tr>';
-  h+=rows.slice().reverse().map(function(x){return '<tr><td>'+esc(x.date)+'</td><td>'+esc(x.agent)+'</td><td>'+x.target+'</td><td>'+x.mission+'</td><td>'+x.pelengkap+'</td><td>'+x.program+'</td><td><b>'+x.total+'</b></td><td><button class="danger smallbtn" onclick="deleteReport('+x.id+')">Hapus</button></td></tr>';}).join('');
+  h+=`<div class="tablewrap"><table><tr><th>Tanggal</th><th>Agent</th><th>Target</th><th>Mission</th><th>Pelengkap</th><th>Program</th><th>Total</th><th>Aksi</th></tr>`;
+  h+=rows.slice().reverse().map(x=>`<tr>
+   <td>${esc(x.date)}</td><td>${esc(x.agent)}</td><td>${x.target}</td>
+   <td>${x.mission}</td><td>${x.pelengkap}</td><td>${x.program}</td><td><b>${x.total}</b></td>
+   <td><button class="action danger smallbtn" onclick="deleteReport(${x.id})">Hapus</button></td>
+  </tr>`).join('');
   h+='</table></div>';
- }else h+='<div class="empty">Belum ada data untuk '+esc(title)+'.</div>';
+ }else h+='<div class="empty">Belum ada data.</div>';
  $('dailyContent').innerHTML=h;
 }
 
-function deleteReport(id){if(!confirm('Hapus report ini?'))return;localStorage.setItem(KEY,JSON.stringify(reports().filter(x=>x.id!==id)));renderDaily();renderHistory();renderReview()}
-function deleteAllReports(){if(!confirm('Hapus SEMUA data Mission Report?'))return;localStorage.removeItem(KEY);renderDaily();renderHistory();renderReview()}
+function deleteReport(id){
+ if(!confirm('Hapus report ini?'))return;
+ localStorage.setItem(KEY,JSON.stringify(reports().filter(x=>x.id!==id)));
+ renderDaily();renderHistory();renderReview();renderPrintPreview();
+}
+function deleteAllReports(){
+ if(!confirm('Hapus SEMUA data Mission Report?'))return;
+ localStorage.removeItem(KEY);
+ renderDaily();renderHistory();renderReview();renderPrintPreview();
+}
+
 function openHistory(){openPage('history');renderHistory()}
 function renderHistory(){
- let d=reports().slice().reverse(),h='';
- if(d.length){
-  h='<div class="tablewrap"><table><tr><th>Tanggal</th><th>Agent</th><th>Target</th><th>Total</th><th>Catatan</th><th>Aksi</th></tr>';
-  h+=d.map(function(x){return '<tr><td>'+esc(x.date)+'</td><td>'+esc(x.agent)+'</td><td>'+x.target+'</td><td><b>'+x.total+'</b></td><td>'+esc(x.notes||'-')+'</td><td><button class="danger smallbtn" onclick="deleteReport('+x.id+');renderHistory()">Hapus</button></td></tr>';}).join('');
-  h+='</table></div>';
- }else h='<div class="empty">Belum ada History.</div>';
- $('historyContent').innerHTML=h;
+ const d=reports().slice().reverse();
+ if(!d.length){$('historyContent').innerHTML='<div class="empty">Belum ada History.</div>';return}
+ $('historyContent').innerHTML=`<div class="tablewrap"><table>
+ <tr><th>Tanggal</th><th>Agent</th><th>Target</th><th>Total</th><th>Catatan</th><th>Aksi</th></tr>
+ ${d.map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.agent)}</td><td>${x.target}</td><td><b>${x.total}</b></td><td>${esc(x.notes||'-')}</td>
+ <td><button class="action danger smallbtn" onclick="deleteReport(${x.id})">Hapus</button></td></tr>`).join('')}
+ </table></div>`;
 }
 
 function openReview(){
  openPage('review');
- renderReview();
- renderReviewDetail();
+ const data=reports(),names=[...new Set(data.map(x=>x.agent))].sort();
+ const old=$('reviewAgent').value;
+ $('reviewAgent').innerHTML='<option value="">Pilih Agent</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+ if(names.includes(old))$('reviewAgent').value=old;
+ if(!$('reviewAgent').value&&names.length)$('reviewAgent').value=names[0];
+ fillReviewReports();renderReview();
 }
-
+function fillReviewReports(){
+ const agent=$('reviewAgent').value,data=reports().filter(x=>!agent||x.agent===agent);
+ const old=$('reviewReport').value;
+ $('reviewReport').innerHTML='<option value="">Pilih Laporan</option>'+data.slice().reverse().map(x=>`<option value="${x.id}">${esc(x.date)} — ${esc(x.agent)} — Score ${x.total}</option>`).join('');
+ if(data.some(x=>String(x.id)===old))$('reviewReport').value=old;
+ else if(data.length)$('reviewReport').value=data.slice().reverse()[0].id;
+}
 function renderReview(){
- let data=reports().slice().reverse();
- let agentSel=$('reviewAgent');
- let current=agentSel.value;
- let names=[...new Set(data.map(x=>x.agent))].sort((a,b)=>a.localeCompare(b));
- agentSel.innerHTML='<option value="">Semua Agent</option>'+names.map(n=>'<option value="'+esc(n)+'">'+esc(n)+'</option>').join('');
- if(names.includes(current)) agentSel.value=current;
-
- let rows=agentSel.value?data.filter(x=>x.agent===agentSel.value):data;
- let reportSel=$('reviewReport');
- let currentReport=reportSel.value;
- reportSel.innerHTML='<option value="">Pilih laporan</option>'+rows.map(x=>{
-   return '<option value="'+x.id+'">'+esc(x.date)+' — '+esc(x.agent)+' — Score '+x.total+'</option>';
- }).join('');
- if(rows.some(x=>String(x.id)===String(currentReport))) reportSel.value=currentReport;
-
- if(!rows.length){
-   $('reviewContent').innerHTML='<div class="empty">Belum ada data untuk direview.</div>';
-   $('reviewDetail').innerHTML='';
-   return;
- }
-
- let total=rows.reduce((s,x)=>s+x.total,0);
- let avg=Math.round(total/rows.length);
- $('reviewContent').innerHTML=
-   '<div class="review-grid">'+
-   '<div class="review-item"><span>Jumlah Report</span><b>'+rows.length+'</b></div>'+
-   '<div class="review-item"><span>Rata-rata Score</span><b>'+avg+'</b></div>'+
-   '</div>';
-
- renderReviewDetail();
+ if(!$('reviewReport'))return;
+ fillReviewReports();
+ const id=+$('reviewReport').value,x=reports().find(r=>r.id===id);
+ if(!x){$('reviewContent').innerHTML='<div class="empty">Belum ada laporan untuk direview.</div>';return}
+ const md=x.missionDetail||missions.map((_,i)=>i<Math.round(x.mission/100));
+ const pd=x.pelDetail||pelengkap.map((_,i)=>i<Math.round(x.pelengkap/100));
+ $('reviewContent').innerHTML=`<div class="detail">
+  <h4>📋 Detail Mission Report</h4>
+  <p><b>Nama Agent:</b> ${esc(x.agent)}</p>
+  <p><b>Tanggal:</b> ${esc(x.date)} &nbsp; <b>Customer Target:</b> ${x.target}</p>
+  <h3>🎯 THE MISSION — GSETSA</h3>
+  <div class="tablewrap"><table><tr><th>Mission</th><th>Dilakukan</th><th>Score</th></tr>
+  ${missions.map((m,i)=>`<tr><td>${m}</td><td>${md[i]?'✓ Dilakukan':'—'}</td><td>${md[i]?100:0}</td></tr>`).join('')}
+  </table></div>
+  <h3>🧩 PELENGKAP</h3>
+  <div class="tablewrap"><table><tr><th>Item</th><th>Dilakukan</th><th>Score</th></tr>
+  ${pelengkap.map((m,i)=>`<tr><td>${m}</td><td>${pd[i]?'✓ Dilakukan':'—'}</td><td>${pd[i]?100:0}</td></tr>`).join('')}
+  </table></div>
+  <h3>📋 PROGRAM</h3>
+  <p>Program A: <b>${x.errors}</b> kesalahan → Score <b>${Math.max(0,100-x.errors*10)}</b></p>
+  <p>Program R: <b>${x.referral===100?'Ada referral':'Tidak ada referral'}</b> → Score <b>${x.referral}</b></p>
+  <div class="score"><div>Total Mission: <b>${x.mission}</b></div><div>Total Pelengkap: <b>${x.pelengkap}</b></div><div>Total Program: <b>${x.program}</b></div><hr><div class="grand">Grand Total: ${x.total}</div></div>
+  <p><b>Catatan:</b> ${esc(x.notes||'-')}</p>
+ </div>`;
 }
 
-function renderReviewDetail(){
- let id=$('reviewReport').value;
- if(!id){$('reviewDetail').innerHTML='<div class="empty">Silakan pilih laporan untuk melihat detail.</div>';return}
- let x=reports().find(r=>String(r.id)===String(id));
- if(!x){$('reviewDetail').innerHTML='<div class="empty">Laporan tidak ditemukan.</div>';return}
+$('reviewAgent').addEventListener('change',()=>{fillReviewReports();renderReview()});
 
- let missionRows=missions.map((m,i)=>{
-   let score=Math.round(x.mission/100); // indikator ringkas dari total mission
-   return '<tr><td>'+m+'</td><td>'+ (score>i?'100':'0') +'</td></tr>';
- }).join('');
-
- let html=
- '<div class="review-card">'+
- '<h4>📋 Detail Mission Report</h4>'+
- '<p><b>Nama Agent:</b> '+esc(x.agent)+'</p>'+
- '<p><b>Tanggal:</b> '+esc(x.date)+' &nbsp; <b>Customer Target:</b> '+x.target+'</p>'+
- '<table class="review-table"><tr><th>Komponen</th><th>Score</th></tr>'+
- '<tr><td>THE MISSION — GSETSA</td><td><b>'+x.mission+'</b></td></tr>'+
- '<tr><td>PElengkap</td><td><b>'+x.pelengkap+'</b></td></tr>'+
- '<tr><td>PROGRAM</td><td><b>'+x.program+'</b></td></tr>'+
- '</table>'+
- '<div class="review-grid">'+
- '<div class="review-item"><span>Program A</span><b>'+x.errors+' kesalahan</b></div>'+
- '<div class="review-item"><span>Referral (R)</span><b>'+(x.referral===100?'Ada':'Tidak ada')+'</b></div>'+
- '</div>'+
- '<div class="review-total"><span>GRAND TOTAL / SCORE TODAY</span><b>'+x.total+'</b></div>'+
- '<p><b>Catatan:</b> '+esc(x.notes||'-')+'</p>'+
- '</div>';
-
- $('reviewDetail').innerHTML=html;
+function openPrint(){
+ openPage('print');
+ fillPrintAgents();renderPrintPreview();
+}
+function fillPrintAgents(){
+ const names=[...new Set(reports().map(x=>x.agent))].sort(),old=$('printAgent').value;
+ $('printAgent').innerHTML='<option value="">Semua Agent</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+ if(names.includes(old))$('printAgent').value=old;
+}
+function getPrintRows(){
+ let d=reports(),agent=$('printAgent').value;
+ if(agent)d=d.filter(x=>x.agent===agent);
+ if($('printPeriod').value==='month'){
+  const ym=new Date().toISOString().slice(0,7);d=d.filter(x=>String(x.date).slice(0,7)===ym);
+ }
+ return d;
+}
+function renderPrintPreview(){
+ const d=getPrintRows(),sum=d.reduce((a,x)=>a+x.total,0),avg=d.length?Math.round(sum/d.length):0;
+ $('printPreview').innerHTML=`<div class="detail">
+ <h4>📊 Preview Laporan</h4>
+ <div class="summary"><div>Report<b>${d.length}</b></div><div>Total Score<b>${sum}</b></div><div>Rata-rata<b>${avg}</b></div></div>
+ <div class="tablewrap"><table><tr><th>Tanggal</th><th>Agent</th><th>Target</th><th>Mission</th><th>Pelengkap</th><th>Program</th><th>Total</th></tr>
+ ${d.length?d.slice().reverse().map(x=>`<tr><td>${esc(x.date)}</td><td>${esc(x.agent)}</td><td>${x.target}</td><td>${x.mission}</td><td>${x.pelengkap}</td><td>${x.program}</td><td><b>${x.total}</b></td></tr>`).join(''):'<tr><td colspan="7" class="center">Belum ada data</td></tr>'}
+ </table></div></div>`;
+}
+function printReport(){
+ const d=getPrintRows(),sum=d.reduce((a,x)=>a+x.total,0),avg=d.length?Math.round(sum/d.length):0;
+ const title=$('printAgent').value?`Agent: ${esc($('printAgent').value)}`:'Semua Agent';
+ $('printArea').innerHTML=`<div style="font-family:Arial;padding:22px;color:#142b55">
+ <h1 style="color:#082b55;margin:0">MISSION REPORT</h1><p>Created by Dee</p><hr>
+ <h2>Daily Report — ${title}</h2>
+ <p>Jumlah Report: <b>${d.length}</b> &nbsp; Total Score: <b>${sum}</b> &nbsp; Rata-rata: <b>${avg}</b></p>
+ <table style="width:100%;border-collapse:collapse;font-size:11px"><tr>
+ <th style="border:1px solid #ccd6e2;padding:6px;background:#eef4fb">Tanggal</th>
+ <th style="border:1px solid #ccd6e2;padding:6px;background:#eef4fb">Agent</th>
+ <th style="border:1px solid #ccd6e2;padding:6px;background:#eef4fb">Target</th>
+ <th style="border:1px solid #ccd6e2;padding:6px;background:#eef4fb">Mission</th>
+ <th style="border:1px solid #ccd6e2;padding:6px;background:#eef4fb">Pelengkap</th>
+ <th style="border:1px solid #ccd6e2;padding:6px;background:#eef4fb">Program</th>
+ <th style="border:1px solid #ccd6e2;padding:6px;background:#eef4fb">Total</th></tr>
+ ${d.slice().reverse().map(x=>`<tr><td style="border:1px solid #ccd6e2;padding:6px">${esc(x.date)}</td><td style="border:1px solid #ccd6e2;padding:6px">${esc(x.agent)}</td><td style="border:1px solid #ccd6e2;padding:6px">${x.target}</td><td style="border:1px solid #ccd6e2;padding:6px">${x.mission}</td><td style="border:1px solid #ccd6e2;padding:6px">${x.pelengkap}</td><td style="border:1px solid #ccd6e2;padding:6px">${x.program}</td><td style="border:1px solid #ccd6e2;padding:6px"><b>${x.total}</b></td></tr>`).join('')}
+ </table><p style="margin-top:24px;text-align:right">Mission Report • Created by Dee</p></div>`;
+ window.print();
 }
 
 function addAgent(){
- let name=$('newAgent').value.trim();if(!name){alert('Nama Agent wajib diisi.');return}
- let a=agents();if(a.some(x=>x.name.toLowerCase()===name.toLowerCase()&&x.active)){alert('Agent aktif dengan nama tersebut sudah ada.');return}
+ const name=$('newAgent').value.trim();
+ if(!name){alert('Nama Agent wajib diisi.');return}
+ const a=agents();
+ if(a.some(x=>x.name.toLowerCase()===name.toLowerCase()&&x.active)){alert('Agent aktif dengan nama tersebut sudah ada.');return}
  let num=1;while(a.some(x=>x.id==='AG'+String(num).padStart(3,'0')))num++;
- a.push({id:'AG'+String(num).padStart(3,'0'),name,active:true});saveAgents(a);$('newAgent').value='';renderAgents();alert('Agent berhasil ditambahkan.');
+ a.push({id:'AG'+String(num).padStart(3,'0'),name,active:true});
+ saveAgents(a);$('newAgent').value='';renderAgents();refreshAgentSelectors();
 }
 function renderAgents(){
- let a=agents(),h='';
- if(a.length){
-  h='<div class="tablewrap"><table><tr><th>Agent</th><th>ID</th><th>Status</th><th>Aksi</th></tr>';
-  h+=a.map(function(x,i){return '<tr><td>'+esc(x.name)+'</td><td>'+x.id+'</td><td>'+(x.active?'<span class="pill">Aktif</span>':'<span class="pill">Nonaktif</span>')+'</td><td><button class="'+(x.active?'danger':'save')+' smallbtn" onclick="toggleAgent('+i+')">'+(x.active?'Nonaktifkan':'Aktifkan')+'</button> <button class="secondary smallbtn" onclick="showQR('+i+')">📱 QR</button></td></tr>';}).join('');
-  h+='</table></div>';
- }else h='<div class="empty">Belum ada Agent. Tambahkan Agent terlebih dahulu.</div>';
- $('agentsContent').innerHTML=h;
+ const a=agents();
+ if(!a.length){$('agentsContent').innerHTML='<div class="empty">Belum ada Agent.</div>';return}
+ $('agentsContent').innerHTML=`<div class="tablewrap"><table><tr><th>Agent</th><th>ID</th><th>Status</th><th>Aksi</th></tr>
+ ${a.map((x,i)=>`<tr><td><b>${esc(x.name)}</b></td><td>${x.id}</td><td>${x.active?'<span class="pill">Aktif</span>':'<span class="pill">Nonaktif</span>'}</td>
+ <td><div class="actionrow">
+ <button class="action secondary smallbtn" onclick="editAgent(${i})">✏️ Edit</button>
+ <button class="action ${x.active?'danger':'save'} smallbtn" onclick="toggleAgent(${i})">${x.active?'Nonaktifkan':'Aktifkan'}</button>
+ <button class="action secondary smallbtn" onclick="showQR(${i})">📱 QR</button>
+ <button class="action danger smallbtn" onclick="deleteAgent(${i})">🗑️ Hapus</button>
+ </div></td></tr>`).join('')}</table></div>`;
 }
-
-function toggleAgent(i){let a=agents();a[i].active=!a[i].active;saveAgents(a);renderAgents()}
-function showQR(i){
- let a=agents()[i],base=location.href.split('?')[0].split('#')[0],url=base+'?agent='+encodeURIComponent(a.id);
- $('qrTitle').textContent=`QR Agent: ${a.name} (${a.id})`;$('qrcode').innerHTML='';
- if(window.QRCode)new QRCode($('qrcode'),{text:url,width:190,height:190});
- $('qrInfo').textContent='Scan QR ini untuk membuka Input Mission Report dan mengisi Nama Agent secara otomatis.';
- $('qrBox').classList.remove('hidden');
+function editAgent(i){
+ const a=agents(),old=a[i].name,name=prompt('Edit Nama Agent:',old);
+ if(name===null)return;
+ const n=name.trim();if(!n)return;
+ if(a.some((x,j)=>j!==i&&x.name.toLowerCase()===n.toLowerCase())){alert('Nama Agent sudah digunakan.');return}
+ a[i].name=n;saveAgents(a);renderAgents();refreshAgentSelectors();
 }
-function loadAgentQR(){
- let id=new URLSearchParams(location.search).get('agent');if(!id)return;
- let a=agents().find(x=>x.id===id&&x.active);
- if(!a){alert('QR Agent tidak ditemukan atau Agent sudah nonaktif.');return}
- $('agent').value=a.name;$('agent').readOnly=true;$('agent').style.background='#f1f5f9';$('agentLock').textContent=`Agent dari QR: ${a.id} — ${a.name}`;$('agentLock').classList.remove('hidden');openPage('input');
+function toggleAgent(i){const a=agents();a[i].active=!a[i].active;saveAgents(a);renderAgents();refreshAgentSelectors()}
+function deleteAgent(i){
+ const a=agents();
+ if(!confirm(`Hapus Agent "${a[i].name}" dari Master Agent? History laporan tidak akan dihapus.`))return;
+ a.splice(i,1);saveAgents(a);renderAgents();refreshAgentSelectors();
+}
+function refreshAgentSelectors(){fillPrintAgents();fillReviewAgents();renderAgents()}
+function fillReviewAgents(){
+ const names=[...new Set(reports().map(x=>x.agent))].sort(),old=$('reviewAgent').value;
+ $('reviewAgent').innerHTML='<option value="">Pilih Agent</option>'+names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+ if(names.includes(old))$('reviewAgent').value=old;
+ fillReviewReports();
 }
 function openAgents(){openPage('agents');renderAgents()}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function showQR(i){
+ const a=agents()[i],base=location.href.split('?')[0].split('#')[0];
+ const url=base+'?agent='+encodeURIComponent(a.id);
+ $('qrTitle').textContent=`QR Agent: ${a.name} (${a.id})`;
+ $('qrcode').innerHTML='';
+ if(window.QRCode)new QRCode($('qrcode'),{text:url,width:190,height:190});
+ else $('qrcode').textContent='QR library tidak tersedia.';
+ $('qrInfo').textContent='Scan QR ini untuk membuka Input Mission Report dan mengisi Nama Agent otomatis.';
+ $('qrBox').classList.remove('hidden');
+}
+function printQR(){window.print()}
 
-function startMission(){
-  const splash=document.getElementById("splashScreen");
-  if(!splash) return;
-  splash.classList.add("hide");
-  setTimeout(function(){
-    splash.style.display="none";
-  },450);
+function loadAgentQR(){
+ const id=new URLSearchParams(location.search).get('agent');if(!id)return;
+ const a=agents().find(x=>x.id===id&&x.active);
+ if(!a){alert('QR Agent tidak ditemukan atau Agent sudah nonaktif.');return}
+ $('agent').value=a.name;$('agent').readOnly=true;$('agent').style.background='#f1f5f9';
+ $('agentLock').textContent=`Agent dari QR: ${a.id} — ${a.name}`;
+ $('agentLock').classList.remove('hidden');openPage('input');
 }
 
-calculate();loadAgentQR();
+function fillPrintAgents(){fillReviewAgents();renderPrintPreview()}
+function init(){
+ calculate();refreshAgentSelectors();loadAgentQR();
+}
+init();
 </script>
 </body>
 </html>
