@@ -14,7 +14,15 @@
 h2{margin:0 0 14px;color:var(--blue)}h3{color:#4338ca;margin-bottom:8px}label{display:block;font-weight:700;margin:11px 0 6px}input,select,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:10px;font-size:15px;background:#fff}button{border:0;border-radius:10px;padding:11px 13px;background:var(--blue);color:#fff;font-weight:700;cursor:pointer;margin-top:9px}.back{background:#64748b}.save{background:var(--green)}.danger{background:var(--danger)}.secondary{background:#6366f1}
 table{width:100%;border-collapse:collapse;margin-top:9px;font-size:14px}th,td{border-bottom:1px solid var(--line);padding:9px 5px;text-align:left;vertical-align:middle}th{background:#eff6ff}.center{text-align:center}.score{background:#eff6ff;border-radius:14px;padding:14px;margin-top:14px}.grand{font-size:24px;font-weight:800;color:var(--blue)}.note{font-size:13px;color:var(--muted)}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:var(--lav2);font-size:12px;font-weight:700}.hidden{display:none!important}.qrbox{text-align:center;border:2px dashed #94a3b8;border-radius:14px;padding:15px;margin-top:14px}.qrbox canvas,.qrbox img{margin:10px auto!important}.smallbtn{padding:7px 9px;font-size:12px;margin:0}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.summary div{background:#eff6ff;padding:10px;border-radius:12px;text-align:center}.summary b{display:block;font-size:18px;color:var(--blue)}.empty{text-align:center;color:var(--muted);padding:20px}
 @media(max-width:560px){.menu{grid-template-columns:1fr}.summary{grid-template-columns:1fr 1fr}.tablewrap{overflow-x:auto}table{min-width:620px}}
-@media print{.header,.menu,button,.back,.danger,.secondary,.save{display:none!important}.panel{display:block!important;box-shadow:none}}
+@media print{
+  .header,.menu,button,.back,.danger,.secondary,.save,.card{display:none!important}
+  .panel{display:none!important;box-shadow:none!important;margin:0!important;padding:0!important}
+  .panel.active{display:block!important}
+  body{background:#fff!important}
+  .wrap{max-width:none!important;padding:0!important;margin:0!important}
+  #daily{width:100%!important}
+  #daily h2{margin-top:0!important}
+}
 
 /* ===== MISSION REPORT SPLASH - FINAL ===== */
 #splashScreen{
@@ -316,7 +324,7 @@ body{background:linear-gradient(180deg,#eef3f9 0%,#f7f2f4 100%) !important;}
 <section id="history" class="panel"><h2>📚 History</h2><div id="historyContent"></div><button class="back" onclick="openPage('home')">← Kembali</button></section>
 <section id="review" class="panel"><h2>🔎 Review</h2><div id="reviewContent"></div><button class="back" onclick="openPage('home')">← Kembali</button></section>
 
-<section id="print" class="panel"><h2>🖨️ Cetak Laporan</h2><p class="note">Gunakan cetak browser untuk mencetak laporan yang tampil. Pilih Daily Report terlebih dahulu jika ingin mencetak rekap.</p><button onclick="openDaily();setTimeout(()=>window.print(),200)">🖨️ Cetak Daily Report</button><button class="back" onclick="openPage('home')">← Kembali</button></section>
+<section id="print" class="panel"><h2>🖨️ Cetak Laporan</h2><p class="note">Cetak laporan akan menampilkan <b>Daily Report saja</b>, tanpa Menu Utama dan tanpa Form Input Mission.</p><button onclick="openDaily();setTimeout(()=>window.print(),250)">🖨️ Cetak Daily Report</button><button class="back" onclick="openPage('home')">← Kembali</button></section>
 
 <section id="agents" class="panel">
 <h2>👥 Master Agent</h2>
@@ -332,7 +340,7 @@ body{background:linear-gradient(180deg,#eef3f9 0%,#f7f2f4 100%) !important;}
 <script>
 const KEY='missionReportsClean', AKEY='missionAgentsClean';
 let dailyMode='all';
-const missions=['G','S','E','T','S','A'], pelengkap=['C','R'];
+const missions=['G','S','E','T','S','A'], pelengkap=['C','RF'];
 const $=id=>document.getElementById(id);
 for(let i=1;i<=15;i++) $('target').insertAdjacentHTML('beforeend',`<option value="${i}">${i} Customer</option>`);
 $('date').value=new Date().toISOString().slice(0,10);
