@@ -497,48 +497,36 @@ function renderReview(){
   <p><b>Catatan:</b> ${esc(x.notes||'-')}</p>
  </div>
  <div class="consistency-card">
-  <h3>📊 Penilaian Per Item</h3>
-  <p class="note">Setiap item dinilai satu per satu dari hasil observasi yang dipilih, sehingga item yang tidak dilakukan langsung terlihat sebagai <b>Perlu diperbaiki</b>.</p>
+  <h3>📊 Penilaian Konsistensi</h3>
+  <p class="note">Penilaian dihitung berdasarkan seluruh hasil observasi/report Agent yang dipilih. Batas <b>≥ 80%</b> = Konsisten.</p>
   <div id="consistencyContent"></div>
  </div>`;
- renderConsistency(x);
+ renderConsistency(x.agent);
 }
 
-function renderConsistency(x){
+
+function renderConsistency(agentName){
  const box=$('consistencyContent');
  if(!box)return;
- const md=x.missionDetail||missions.map((_,i)=>i<Math.round((Number(x.mission)||0)/100));
- const pd=x.pelDetail||pelengkap.map((_,i)=>i<Math.round((Number(x.pelengkap)||0)/100));
- const missionLabels=[
-  ['G','Greeting'],['S','Socialization'],['E','Education'],['T','Telling'],['S','Satisfaction'],['A','Appreciation']
- ];
- const pelLabels=[['C','C'],['RF','RF']];
- const rows=[];
- missionLabels.forEach((item,i)=>rows.push({group:'THE MISSION — GSETSA',key:item[0],label:item[1],done:!!md[i]}));
- pelLabels.forEach((item,i)=>rows.push({group:'PELEN GKAP',key:item[0],label:item[1],done:!!pd[i]}));
- const referralDone=Number(x.referral)===100;
- rows.push({group:'PROGRAM',key:'R',label:'Referral',done:referralDone});
- const errors=Number(x.errors)||0;
- const statusText=d=>d?'✓ Dilakukan':'✕ Tidak dilakukan';
- const statusClass=d=>d?'good':'bad';
- const needs=rows.filter(r=>!r.done);
+ const data=reports().filter(r=>r.agent===agentName);
+ if(!data.length){box.innerHTML='<div class="empty">Belum ada hasil observasi/report untuk dinilai.</div>';return}
+ const labels=['Greeting','Socialization','Education','Telling','Satisfaction','Appreciation'];
+ const keys=['G','S','E','T','S','A'];
+ const counts=labels.map((label,i)=>{
+  const done=data.filter(r=>Array.isArray(r.missionDetail)?r.missionDetail[i]:(Number(r.mission)||0)>=((i+1)*100)).length;
+  const pct=Math.round(done/data.length*100);
+  let status=pct>=80?'Konsisten dilakukan':pct>0?'Tidak konsisten':'Tidak dilakukan';
+  return {label,key:keys[i],done,total:data.length,pct,status};
+ });
+ const consistent=counts.filter(x=>x.status==='Konsisten dilakukan').length;
+ const inconsistent=counts.filter(x=>x.status==='Tidak konsisten').length;
+ const notdone=counts.filter(x=>x.status==='Tidak dilakukan').length;
+ const overall=Math.round(counts.reduce((a,x)=>a+x.pct,0)/counts.length);
+ let overallStatus=overall>=80?'Konsisten':overall>0?'Tidak konsisten':'Tidak dilakukan';
+ const cls=s=>s==='Konsisten dilakukan'?'good':s==='Tidak konsisten'?'warn':'bad';
  box.innerHTML=`
-  <div class="consistency-summary">
-   <div><span>Total Item</span><b>${rows.length}</b></div>
-   <div><span>Dilakukan</span><b>${rows.filter(r=>r.done).length}</b></div>
-   <div><span>Perlu Diperbaiki</span><b>${needs.length}</b></div>
-  </div>
-  <div class="tablewrap"><table>
-   <tr><th>Kategori</th><th>Item</th><th>Status</th><th>Catatan Perbaikan</th></tr>
-   ${rows.map(r=>`<tr><td>${r.group}</td><td><b>${r.key}</b> — ${r.label}</td><td><span class="status-pill ${statusClass(r.done)}">${statusText(r.done)}</span></td><td>${r.done?'—':'Item ini perlu menjadi fokus perbaikan.'}</td></tr>`).join('')}
-  </table></div>
-  <div class="tablewrap" style="margin-top:12px"><table>
-   <tr><th>Program A</th><th>Jumlah Kesalahan</th><th>Status</th></tr>
-   <tr><td>A — Accuracy</td><td><b>${errors}</b></td><td><span class="status-pill ${errors===0?'good':'bad'}">${errors===0?'✓ Tidak ada kesalahan':'✕ Ada kesalahan — perlu diperbaiki'}</span></td></tr>
-  </table></div>
-  <div class="consistency-note"><b>Fokus Perbaikan:</b> ${needs.length?needs.map(r=>`${r.key} — ${r.label}`).join(', '):'Tidak ada item yang perlu diperbaiki pada laporan ini.'}</div>`;
+  <div class="consistency-summary">\n   <div><span>Observasi</span><b>${data.length}</b></div>\n   <div><span>Rata-rata Konsistensi</span><b>${overall}%</b></div>\n   <div><span>Status</span><b>${overallStatus}</b></div>\n  </div>\n  <div class="consistency-badges">\n   <span class="badge good">🟢 Konsisten: ${consistent}</span>\n   <span class="badge warn">🟡 Tidak konsisten: ${inconsistent}</span>\n   <span class="badge bad">🔴 Tidak dilakukan: ${notdone}</span>\n  </div>\n  <div class="tablewrap"><table>\n   <tr><th>Action</th><th>Dilakukan</th><th>Total Observasi</th><th>Konsistensi</th><th>Status</th></tr>\n   ${counts.map(x=>`<tr><td><b>${x.key}</b> — ${x.label}</td><td>${x.done}</td><td>${x.total}</td><td><b>${x.pct}%</b></td><td><span class="status-pill ${cls(x.status)}">${x.status}</span></td></tr>`).join('')}\n  </table></div>\n  <div class="consistency-note"><b>Kesimpulan:</b> ${consistent} dari ${counts.length} Action konsisten dilakukan, ${inconsistent} tidak konsisten, dan ${notdone} tidak dilakukan berdasarkan ${data.length} observasi/report Agent <b>${esc(agentName)}</b>.</div>`;
 }
-
 
 $('reviewAgent').addEventListener('change',()=>{fillReviewReports();renderReview()});
 
