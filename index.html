@@ -515,7 +515,7 @@ function renderConsistency(x){
  const missionLabels=[
   ['G','Greeting'],['S','Socialization'],['E','Education'],['T','Telling'],['S','Satisfaction'],['A','Appreciation']
  ];
- const pelLabels=[['C','Checking'],['SR','Solution Report'],['FU','Folowup'],['IN',Interaksi']];
+ const pelLabels=[['C','Checking'],['SR','Solution Report'],['FU','Folowup'],['IN','Interaksi']];
  const getDetail=(r,type,i)=>{
   const arr=type==='mission' ? r.missionDetail : r.pelDetail;
   if(Array.isArray(arr) && typeof arr[i]!=='undefined') return !!arr[i];
