@@ -136,7 +136,7 @@ hr{border:0;border-top:1px solid #cfd8e3;margin:12px 0}
 }
 
 .consistency-card{margin-top:16px;padding:16px;border:1px solid #d5ddeb;border-radius:18px;background:#f8faff}
-.consistency-card h3{margin:0 0 8px;color:#fff}
+.consistency-card h3{margin:0 0 8px;color:#0a2d5e}
 .consistency-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
 .consistency-summary>div{background:#fff;border:1px solid #e0e7f2;border-radius:14px;padding:12px;text-align:center}
 .consistency-summary span{display:block;font-size:12px;color:#68788f;margin-bottom:5px}
@@ -148,6 +148,15 @@ hr{border:0;border-top:1px solid #cfd8e3;margin:12px 0}
 .badge.bad,.status-pill.bad{background:#fee2e2;color:#991b1b}
 .consistency-note{margin-top:12px;padding:12px;border-radius:12px;background:#eef4ff;color:#18345f;font-size:13px;line-height:1.5}
 @media(max-width:560px){.consistency-summary{grid-template-columns:1fr}.consistency-card table{font-size:12px}}
+
+
+.chart-row{display:grid;grid-template-columns:minmax(82px,1fr) 3fr 58px;gap:9px;align-items:center;margin:12px 0;font-size:13px}
+.chart-name{font-weight:700;overflow-wrap:anywhere}
+.chart-track{height:18px;background:#e8eef6;border-radius:7px;overflow:hidden}
+.chart-bar{height:100%;min-width:2px;border-radius:7px;background:linear-gradient(90deg,#0759b8,#398ce5)}
+.chart-value{text-align:right;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.chart-empty{padding:18px;text-align:center;color:var(--muted);background:#f8faff;border-radius:12px}
+@media(max-width:560px){.chart-row{grid-template-columns:88px minmax(50px,1fr) 52px;gap:6px;font-size:12px}.chart-name{font-size:12px}}
 
 @media print{
  body{background:#fff}
@@ -187,6 +196,7 @@ hr{border:0;border-top:1px solid #cfd8e3;margin:12px 0}
   <button class="card" onclick="openHistory()"><span>📚</span>History</button>
   <button class="card" onclick="openReview()"><span>🔎</span>Review</button>
   <button class="card" onclick="openPrint()"><span>🖨️</span>Cetak Laporan</button>
+  <button class="card" onclick="openCharts()"><span>📈</span>Grafik Pencapaian Agent</button>
   <button class="card" onclick="openAgents()"><span>👥</span>Master Agent</button>
  </div>
 </section>
@@ -315,6 +325,33 @@ hr{border:0;border-top:1px solid #cfd8e3;margin:12px 0}
  <button class="action back" onclick="openPage('home')">← Kembali</button>
 </section>
 
+<section id="charts" class="panel">
+ <h2>📈 Grafik Pencapaian Agent</h2>
+ <p class="note">Grafik dihitung dari data Mission Report yang tersimpan di perangkat ini. Rata-rata = total Grand Total dibagi jumlah report; Total Nilai = penjumlahan Grand Total seluruh report.</p>
+ <label>Periode</label>
+ <select id="chartMonth" onchange="renderCharts()">
+  <option value="all">Semua Bulan</option>
+  <option value="01">Januari</option><option value="02">Februari</option><option value="03">Maret</option><option value="04">April</option>
+  <option value="05">Mei</option><option value="06">Juni</option><option value="07">Juli</option><option value="08">Agustus</option>
+  <option value="09">September</option><option value="10">Oktober</option><option value="11">November</option><option value="12">Desember</option>
+ </select>
+ <label>Tahun</label>
+ <select id="chartYear" onchange="renderCharts()"><option value="all">Semua Tahun</option></select>
+ <div id="chartSummary" class="summary" style="margin-top:14px"></div>
+ <div class="detail">
+  <h3>Rata-rata Grand Total per Agent</h3>
+  <p class="note">Rata-rata nilai per laporan untuk setiap Agent.</p>
+  <div id="averageChart"></div>
+ </div>
+ <div class="detail">
+  <h3>Total Nilai per Agent</h3>
+  <p class="note">Akumulasi Grand Total seluruh laporan untuk setiap Agent.</p>
+  <div id="totalChart"></div>
+ </div>
+ <div id="chartTable"></div>
+ <button class="action back" onclick="openPage('home')">← Kembali</button>
+</section>
+
 <section id="agents" class="panel">
  <h2>👥 Master Agent</h2>
  <p class="note">Setiap Agent memiliki ID dan QR Code unik. Agent lama dapat dinonaktifkan tanpa menghapus History.</p>
@@ -337,7 +374,7 @@ hr{border:0;border-top:1px solid #cfd8e3;margin:12px 0}
 
 <script>
 const KEY='missionReportsFinalV1', AKEY='missionAgentsFinalV1';
-const missions=['G','S','E','T','S','A'], pelengkap=['CH','SR','FU','IN'];
+const missions=['G','S','E','T','S','A'], pelengkap=['C','RF'];
 let dailyMode='all', editingAgentIndex=-1;
 
 const $=id=>document.getElementById(id);
@@ -515,7 +552,7 @@ function renderConsistency(x){
  const missionLabels=[
   ['G','Greeting'],['S','Socialization'],['E','Education'],['T','Telling'],['S','Satisfaction'],['A','Appreciation']
  ];
- const pelLabels=[['C','Checking'],['SR','Solution Report'],['FU','Folowup'],['IN','Interaksi']];
+ const pelLabels=[['C','C'],['RF','RF']];
  const getDetail=(r,type,i)=>{
   const arr=type==='mission' ? r.missionDetail : r.pelDetail;
   if(Array.isArray(arr) && typeof arr[i]!=='undefined') return !!arr[i];
@@ -702,6 +739,46 @@ function loadAgentQR(){
  $('agent').value=a.name;$('agent').readOnly=true;$('agent').style.background='#f1f5f9';
  $('agentLock').textContent=`Agent dari QR: ${a.id} — ${a.name}`;
  $('agentLock').classList.remove('hidden');openPage('input');
+}
+
+
+function openCharts(){
+ openPage('charts');
+ const data=reports();
+ const years=[...new Set(data.map(r=>String(r.date||'').slice(0,4)).filter(y=>/^\d{4}$/.test(y)))].sort().reverse();
+ const yearSel=$('chartYear'),old=yearSel.value;
+ yearSel.innerHTML='<option value="all">Semua Tahun</option>'+years.map(y=>`<option value="${y}">${y}</option>`).join('');
+ if(years.includes(old))yearSel.value=old;
+ renderCharts();
+}
+function renderCharts(){
+ const month=$('chartMonth').value,year=$('chartYear').value;
+ const filtered=reports().filter(r=>{
+  const d=String(r.date||'');
+  return (month==='all'||d.slice(5,7)===month)&&(year==='all'||d.slice(0,4)===year);
+ });
+ const grouped={};
+ filtered.forEach(r=>{
+  const name=String(r.agent||'Tanpa Nama');
+  if(!grouped[name])grouped[name]={agent:name,count:0,total:0};
+  grouped[name].count++;
+  grouped[name].total+=Number(r.total)||0;
+ });
+ const rows=Object.values(grouped).map(x=>({...x,average:x.count?Math.round(x.total/x.count):0})).sort((a,b)=>a.agent.localeCompare(b.agent,'id'));
+ const totalReports=filtered.length,totalScore=filtered.reduce((sum,r)=>sum+(Number(r.total)||0),0);
+ $('chartSummary').innerHTML=`<div>Jumlah Report<b>${totalReports}</b></div><div>Total Nilai<b>${totalScore.toLocaleString('id-ID')}</b></div><div>Jumlah Agent<b>${rows.length}</b></div>`;
+ const draw=(target,key,label)=>{
+  if(!rows.length){$(target).innerHTML='<div class="chart-empty">Belum ada data pada periode ini.</div>';return;}
+  const max=Math.max(1,...rows.map(r=>r[key]));
+  $(target).innerHTML=rows.slice().sort((a,b)=>b[key]-a[key]||a.agent.localeCompare(b.agent,'id')).map(r=>{
+   const width=Math.max(1,(r[key]/max)*100);
+   return `<div class="chart-row"><div class="chart-name">${esc(r.agent)}</div><div class="chart-track"><div class="chart-bar" style="width:${width}%"></div></div><div class="chart-value">${Number(r[key]).toLocaleString('id-ID')}</div></div>`;
+  }).join('');
+ };
+ draw('averageChart','average','Rata-rata');
+ draw('totalChart','total','Total');
+ if(!rows.length){$('chartTable').innerHTML='';return;}
+ $('chartTable').innerHTML=`<h3>Rincian Pencapaian</h3><div class="tablewrap"><table><tr><th>Agent</th><th>Jumlah Report</th><th>Total Nilai</th><th>Rata-rata</th></tr>${rows.slice().sort((a,b)=>b.average-a.average||a.agent.localeCompare(b.agent,'id')).map(r=>`<tr><td>${esc(r.agent)}</td><td>${r.count}</td><td>${r.total.toLocaleString('id-ID')}</td><td><b>${r.average.toLocaleString('id-ID')}</b></td></tr>`).join('')}</table></div>`;
 }
 
 function init(){
