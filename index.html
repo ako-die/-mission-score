@@ -150,13 +150,7 @@ hr{border:0;border-top:1px solid #cfd8e3;margin:12px 0}
 @media(max-width:560px){.consistency-summary{grid-template-columns:1fr}.consistency-card table{font-size:12px}}
 
 
-.chart-row{display:grid;grid-template-columns:minmax(82px,1fr) 3fr 58px;gap:9px;align-items:center;margin:12px 0;font-size:13px}
-.chart-name{font-weight:700;overflow-wrap:anywhere}
-.chart-track{height:18px;background:#e8eef6;border-radius:7px;overflow:hidden}
-.chart-bar{height:100%;min-width:2px;border-radius:7px;background:linear-gradient(90deg,#0759b8,#398ce5)}
-.chart-value{text-align:right;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
-.chart-empty{padding:18px;text-align:center;color:var(--muted);background:#f8faff;border-radius:12px}
-@media(max-width:560px){.chart-row{grid-template-columns:88px minmax(50px,1fr) 52px;gap:6px;font-size:12px}.chart-name{font-size:12px}}
+.line-chart{width:100%;height:auto;display:block;overflow:visible}.line-chart text{font-family:Arial,sans-serif;fill:#142b55;font-size:11px}.line-chart .gridline{stroke:#d9e1ec;stroke-width:1}.line-chart .axis{stroke:#8798ad;stroke-width:1.2}.line-chart .series{fill:none;stroke:#0759b8;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.line-chart .point{fill:#b31343;stroke:#fff;stroke-width:2}.chart-empty{padding:18px;text-align:center;color:var(--muted);background:#f8faff;border-radius:12px}
 
 @media print{
  body{background:#fff}
@@ -214,14 +208,15 @@ hr{border:0;border-top:1px solid #cfd8e3;margin:12px 0}
  <input id="date" type="date">
 
  <h3>🎯 THE MISSION — GSETSA</h3>
+ <p class="note">Isi jumlah customer yang menerima setiap item. Contoh: target 5 customer, Greeting dilakukan kepada 4 customer → Tidak Konsisten.</p>
  <div class="tablewrap"><table>
-  <tr><th>Mission</th><th class="center">Dilakukan</th><th>Score</th></tr>
+  <tr><th>Mission</th><th>Jumlah Customer Dilakukan</th><th>Score</th><th>Status</th></tr>
   <tbody id="missionRows"></tbody>
  </table></div>
 
  <h3>🧩 PELENGKAP</h3>
  <div class="tablewrap"><table>
-  <tr><th>Item</th><th class="center">Dilakukan</th><th>Score</th></tr>
+  <tr><th>Item</th><th>Jumlah Customer Dilakukan</th><th>Score</th><th>Status</th></tr>
   <tbody id="pelRows"></tbody>
  </table></div>
 
@@ -387,19 +382,39 @@ function saveAgents(a){localStorage.setItem(AKEY,JSON.stringify(a))}
 
 for(let i=1;i<=15;i++) $('target').insertAdjacentHTML('beforeend',`<option value="${i}">${i} Customer</option>`);
 $('date').value=new Date().toISOString().slice(0,10);
+$('target').addEventListener('change',()=>renderCountInputs(true));
 
-$('missionRows').innerHTML=missions.map(m=>`
-<tr><td><b>${m}</b></td><td class="center"><input type="checkbox" class="m" onchange="calculate()"></td><td class="ms">0</td></tr>`).join('');
-$('pelRows').innerHTML=pelengkap.map(m=>`
-<tr><td><b>${m}</b></td><td class="center"><input type="checkbox" class="p" onchange="calculate()"></td><td class="ps">0</td></tr>`).join('');
-
+function countSelect(cls,index,label){
+ const target=+$('target').value||15;
+ const options=Array.from({length:target+1},(_,n)=>`<option value="${n}">${n} dari ${target}</option>`).join('');
+ return `<select class="${cls}" data-index="${index}" aria-label="Jumlah customer ${label}" onchange="calculate()">${options}</select>`;
+}
+function renderCountInputs(preserve=false){
+ const oldMission=preserve?[...document.querySelectorAll('.mc')].map(e=>+e.value||0):[];
+ const oldPel=preserve?[...document.querySelectorAll('.pc')].map(e=>+e.value||0):[];
+ const ml=[['G','Greeting'],['S','Socialization'],['E','Education'],['T','Telling'],['S','Satisfaction'],['A','Appreciation']];
+ $('missionRows').innerHTML=ml.map((item,i)=>`<tr><td><b>${item[0]}</b> — ${item[1]}</td><td>${countSelect('mc',i,item[1])}</td><td class="ms">0</td><td class="mstatus"><span class="status-pill bad">🔴 Tidak Dilakukan</span></td></tr>`).join('');
+ $('pelRows').innerHTML=pelengkap.map((m,i)=>`<tr><td><b>${m}</b></td><td>${countSelect('pc',i,m)}</td><td class="ps">0</td><td class="pstatus"><span class="status-pill bad">🔴 Tidak Dilakukan</span></td></tr>`).join('');
+ if(preserve){document.querySelectorAll('.mc').forEach((e,i)=>e.value=Math.min(+$('target').value||15,oldMission[i]||0));document.querySelectorAll('.pc').forEach((e,i)=>e.value=Math.min(+$('target').value||15,oldPel[i]||0));}
+ calculate();
+}
+function itemStatus(done,target){
+ if(done===0)return {label:'Tidak Dilakukan',cls:'bad',icon:'🔴'};
+ if(done===target)return {label:'Konsisten',cls:'good',icon:'🟢'};
+ return {label:'Tidak Konsisten',cls:'warn',icon:'🟡'};
+}
 function calculate(){
  let tm=0,tp=0;
- document.querySelectorAll('.m').forEach((e,i)=>{
-  let s=e.checked?100:0;tm+=s;document.querySelectorAll('.ms')[i].textContent=s;
+ const target=+$('target').value||15;
+ document.querySelectorAll('.mc').forEach((e,i)=>{
+  const done=+e.value||0,s=done>0?100:0,st=itemStatus(done,target);tm+=s;
+  document.querySelectorAll('.ms')[i].textContent=s;
+  document.querySelectorAll('.mstatus')[i].innerHTML=`<span class="status-pill ${st.cls}">${st.icon} ${st.label}</span>`;
  });
- document.querySelectorAll('.p').forEach((e,i)=>{
-  let s=e.checked?100:0;tp+=s;document.querySelectorAll('.ps')[i].textContent=s;
+ document.querySelectorAll('.pc').forEach((e,i)=>{
+  const done=+e.value||0,s=done>0?100:0,st=itemStatus(done,target);tp+=s;
+  document.querySelectorAll('.ps')[i].textContent=s;
+  document.querySelectorAll('.pstatus')[i].innerHTML=`<span class="status-pill ${st.cls}">${st.icon} ${st.label}</span>`;
  });
  let n=Math.max(0,parseInt($('errors').value||0,10));
  let a=Math.max(0,100-n*10),r=+$('referral').value;
@@ -420,8 +435,7 @@ function resetInput(){
  $('agent').value='';$('agent').readOnly=false;$('agent').style.background='';
  $('agentLock').classList.add('hidden');$('target').value='';
  $('errors').value=0;$('referral').value='0';$('notes').value='';
- document.querySelectorAll('.m,.p').forEach(e=>e.checked=false);
- calculate();
+ renderCountInputs();
 }
 
 function saveReport(){
@@ -436,8 +450,10 @@ function saveReport(){
   notes:$('notes').value.trim(),errors,referral:+$('referral').value,
   mission:+$('tm').textContent,pelengkap:+$('tp').textContent,
   program:+$('tprog').textContent,total:+$('grand').textContent,
-  missionDetail:[...document.querySelectorAll('.m')].map(x=>x.checked),
-  pelDetail:[...document.querySelectorAll('.p')].map(x=>x.checked),
+  missionCounts:[...document.querySelectorAll('.mc')].map(x=>+x.value||0),
+  pelCounts:[...document.querySelectorAll('.pc')].map(x=>+x.value||0),
+  missionDetail:[...document.querySelectorAll('.mc')].map(x=>(+x.value||0)>0),
+  pelDetail:[...document.querySelectorAll('.pc')].map(x=>(+x.value||0)>0),
   created:new Date().toISOString()
  });
  localStorage.setItem(KEY,JSON.stringify(d));
@@ -535,7 +551,7 @@ function renderReview(){
  </div>
  <div class="consistency-card">
   <h3>📊 Penilaian Per Item</h3>
-  <p class="note">Setiap item dinilai satu per satu dari hasil observasi yang dipilih, sehingga item yang tidak dilakukan langsung terlihat sebagai <b>Perlu diperbaiki</b>.</p>
+  <p class="note">Setiap item dinilai terhadap seluruh target customer pada laporan ini. Status dihitung dari jumlah customer yang menerima tindakan.</p>
   <div id="consistencyContent"></div>
  </div>`;
  renderConsistency(x);
@@ -544,49 +560,35 @@ function renderReview(){
 function renderConsistency(x){
  const box=$('consistencyContent');
  if(!box)return;
- // Konsistensi dihitung dari seluruh customer/observasi pada tanggal laporan
- // untuk Agent yang sama: semua dilakukan = Konsisten; sebagian = Tidak konsisten;
- // tidak ada yang dilakukan = Tidak dilakukan.
- const obs=reports().filter(r=>r.agent===x.agent && r.date===x.date);
- const totalObs=obs.length;
- const missionLabels=[
-  ['G','Greeting'],['S','Socialization'],['E','Education'],['T','Telling'],['S','Satisfaction'],['A','Appreciation']
- ];
+ const target=Math.max(1,Number(x.target)||1);
+ const missionLabels=[['G','Greeting'],['S','Socialization'],['E','Education'],['T','Telling'],['S','Satisfaction'],['A','Appreciation']];
  const pelLabels=[['C','C'],['RF','RF']];
- const getDetail=(r,type,i)=>{
-  const arr=type==='mission' ? r.missionDetail : r.pelDetail;
-  if(Array.isArray(arr) && typeof arr[i]!=='undefined') return !!arr[i];
+ const countFor=(r,type,i)=>{
+  const counts=type==='mission'?r.missionCounts:r.pelCounts;
+  if(Array.isArray(counts)&&counts[i]!==undefined)return Math.max(0,Math.min(Number(r.target)||target,Number(counts[i])||0));
+  const arr=type==='mission'?r.missionDetail:r.pelDetail;
+  if(Array.isArray(arr)&&arr[i]!==undefined)return arr[i]?(Number(r.target)||target):0;
   const score=type==='mission'?Number(r.mission)||0:Number(r.pelengkap)||0;
-  const count=type==='mission'?missions.length:pelengkap.length;
-  return i < Math.round(score/100) && i<count;
- };
- const statusFor=(doneCount,total)=>{
-  if(doneCount===0)return {label:'Tidak dilakukan',cls:'bad'};
-  if(doneCount===total)return {label:'Konsisten dilakukan',cls:'good'};
-  return {label:'Tidak konsisten dilakukan',cls:'warn'};
+  const n=type==='mission'?missions.length:pelengkap.length;
+  return i<Math.round(score/100)&&i<n?(Number(r.target)||target):0;
  };
  const rows=[];
  missionLabels.forEach((item,i)=>{
-  const doneCount=obs.filter(r=>getDetail(r,'mission',i)).length;
-  const st=statusFor(doneCount,totalObs);
-  rows.push({group:'THE MISSION — GSETSA',key:item[0],label:item[1],doneCount,status:st});
+  const done=countFor(x,'mission',i),st=itemStatus(done,target);
+  rows.push({group:'THE MISSION — GSETSA',key:item[0],label:item[1],done,target,status:st});
  });
  pelLabels.forEach((item,i)=>{
-  const doneCount=obs.filter(r=>getDetail(r,'pel',i)).length;
-  const st=statusFor(doneCount,totalObs);
-  rows.push({group:'PELENGKAP',key:item[0],label:item[1],doneCount,status:st});
+  const done=countFor(x,'pel',i),st=itemStatus(done,target);
+  rows.push({group:'PELENGKAP',key:item[0],label:item[1],done,target,status:st});
  });
- const referralDone=obs.filter(r=>Number(r.referral)===100).length;
- const refStatus=statusFor(referralDone,totalObs);
- rows.push({group:'PROGRAM',key:'R',label:'Referral',doneCount:referralDone,status:refStatus});
- const errors=obs.reduce((sum,r)=>sum+(Number(r.errors)||0),0);
  const consistent=rows.filter(r=>r.status.cls==='good').length;
  const inconsistent=rows.filter(r=>r.status.cls==='warn').length;
  const notDone=rows.filter(r=>r.status.cls==='bad').length;
+ const errors=Number(x.errors)||0;
  const needs=rows.filter(r=>r.status.cls!=='good');
  box.innerHTML=`
   <div class="consistency-summary">
-   <div><span>Total Customer/Observasi</span><b>${totalObs}</b></div>
+   <div><span>Target Customer</span><b>${target}</b></div>
    <div><span>Konsisten</span><b>${consistent}</b></div>
    <div><span>Tidak Konsisten</span><b>${inconsistent}</b></div>
   </div>
@@ -595,18 +597,17 @@ function renderConsistency(x){
    <span class="status-pill warn">🟡 Tidak konsisten: ${inconsistent}</span>
    <span class="status-pill bad">🔴 Tidak dilakukan: ${notDone}</span>
   </div>
-  <p class="note">Penilaian berdasarkan <b>${totalObs} customer/observasi</b> Agent ${esc(x.agent)} pada tanggal ${esc(x.date)}. Jika dilakukan pada seluruh observasi = <b>Konsisten</b>; jika hanya sebagian = <b>Tidak konsisten dilakukan</b>; jika tidak dilakukan sama sekali = <b>Tidak dilakukan</b>.</p>
+  <p class="note">Penilaian ini berdasarkan ${target} target customer pada laporan Agent ${esc(x.agent)} tanggal ${esc(x.date)}. Konsisten berarti dilakukan kepada seluruh target; Tidak Konsisten berarti dilakukan kepada sebagian target; Tidak Dilakukan berarti tidak dilakukan kepada satu pun target.</p>
   <div class="tablewrap"><table>
-   <tr><th>Kategori</th><th>Item</th><th>Dilakukan</th><th>Total Observasi</th><th>Status</th></tr>
-   ${rows.map(r=>`<tr><td>${r.group}</td><td><b>${r.key}</b> — ${r.label}</td><td>${r.doneCount}</td><td>${totalObs}</td><td><span class="status-pill ${r.status.cls}">${r.status.cls==='good'?'🟢':r.status.cls==='warn'?'🟡':'🔴'} ${r.status.label}</span></td></tr>`).join('')}
+   <tr><th>Kategori</th><th>Item</th><th>Dilakukan</th><th>Total Target</th><th>Status</th></tr>
+   ${rows.map(r=>`<tr><td>${r.group}</td><td><b>${r.key}</b> — ${r.label}</td><td>${r.done}</td><td>${r.target}</td><td><span class="status-pill ${r.status.cls}">${r.status.icon} ${r.status.label}</span></td></tr>`).join('')}
   </table></div>
   <div class="tablewrap" style="margin-top:12px"><table>
    <tr><th>Program A — Accuracy</th><th>Total Kesalahan</th><th>Status</th></tr>
-   <tr><td>Seluruh customer/observasi</td><td><b>${errors}</b></td><td><span class="status-pill ${errors===0?'good':'bad'}">${errors===0?'🟢 Tidak ada kesalahan':'🔴 Ada kesalahan — perlu diperbaiki'}</span></td></tr>
+   <tr><td>Laporan ini</td><td><b>${errors}</b></td><td><span class="status-pill ${errors===0?'good':'bad'}">${errors===0?'🟢 Tidak ada kesalahan':'🔴 Ada kesalahan — perlu diperbaiki'}</span></td></tr>
   </table></div>
-  <div class="consistency-note"><b>Fokus Perbaikan:</b> ${needs.length?needs.map(r=>`${r.key} — ${r.label} (${r.status.label})`).join(', '):'Semua item konsisten dilakukan pada seluruh observasi.'}</div>`;
+  <div class="consistency-note"><b>Fokus Perbaikan:</b> ${needs.length?needs.map(r=>`${r.key} — ${r.label} (${r.status.label})`).join(', '):'Semua item konsisten dilakukan kepada seluruh target customer.'}</div>`;
 }
-
 
 $('reviewAgent').addEventListener('change',()=>{fillReviewReports();renderReview()});
 
@@ -769,11 +770,15 @@ function renderCharts(){
  $('chartSummary').innerHTML=`<div>Jumlah Report<b>${totalReports}</b></div><div>Total Nilai<b>${totalScore.toLocaleString('id-ID')}</b></div><div>Jumlah Agent<b>${rows.length}</b></div>`;
  const draw=(target,key,label)=>{
   if(!rows.length){$(target).innerHTML='<div class="chart-empty">Belum ada data pada periode ini.</div>';return;}
-  const max=Math.max(1,...rows.map(r=>r[key]));
-  $(target).innerHTML=rows.slice().sort((a,b)=>b[key]-a[key]||a.agent.localeCompare(b.agent,'id')).map(r=>{
-   const width=Math.max(1,(r[key]/max)*100);
-   return `<div class="chart-row"><div class="chart-name">${esc(r.agent)}</div><div class="chart-track"><div class="chart-bar" style="width:${width}%"></div></div><div class="chart-value">${Number(r[key]).toLocaleString('id-ID')}</div></div>`;
-  }).join('');
+  const data=rows.slice().sort((a,b)=>a.agent.localeCompare(b.agent,'id'));
+  const W=340,H=220,L=34,R=12,T=18,B=58,plotW=W-L-R,plotH=H-T-B;
+  const max=Math.max(1,...data.map(r=>Number(r[key])||0));
+  const x=i=>data.length===1?L+plotW/2:L+i*plotW/(data.length-1);
+  const y=v=>T+plotH-(Number(v)||0)/max*plotH;
+  const grid=[0,0.25,0.5,0.75,1].map(fr=>{const yy=T+plotH-fr*plotH;return `<line class="gridline" x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}"/><text x="${L-5}" y="${yy+4}" text-anchor="end">${Math.round(max*fr).toLocaleString('id-ID')}</text>`}).join('');
+  const points=data.map((r,i)=>`${x(i)},${y(r[key])}`).join(' ');
+  const circles=data.map((r,i)=>`<circle class="point" cx="${x(i)}" cy="${y(r[key])}" r="4"><title>${esc(r.agent)}: ${Number(r[key]).toLocaleString('id-ID')}</title></circle><text x="${x(i)}" y="${H-B+16}" text-anchor="middle">${esc(r.agent.length>10?r.agent.slice(0,9)+'…':r.agent)}</text><text x="${x(i)}" y="${y(r[key])-9}" text-anchor="middle" font-weight="700">${Number(r[key]).toLocaleString('id-ID')}</text>`).join('');
+  $(target).innerHTML=`<svg class="line-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik garis ${label} per Agent">${grid}<line class="axis" x1="${L}" y1="${T}" x2="${L}" y2="${T+plotH}"/><line class="axis" x1="${L}" y1="${T+plotH}" x2="${W-R}" y2="${T+plotH}"/><polyline class="series" points="${points}"/>${circles}</svg>`;
  };
  draw('averageChart','average','Rata-rata');
  draw('totalChart','total','Total');
@@ -782,7 +787,7 @@ function renderCharts(){
 }
 
 function init(){
- calculate();refreshAgentSelectors();loadAgentQR();
+ renderCountInputs();refreshAgentSelectors();loadAgentQR();
 }
 init();
 </script>
